@@ -4,11 +4,11 @@ using UnityEngine;
 
 public static class TextureGeneration
 {
-    public static Texture2D TextureFromColourMap(Color[] colourMap, int width, int height)
+    public static Texture2D TextureFromColourMap(Color[] colourMap, int width, int height, FilterMode filterMode = FilterMode.Point)
     {
         Texture2D texture = new Texture2D(width, height);
-        
-        texture.filterMode = FilterMode.Point;
+
+        texture.filterMode = filterMode;
         texture.wrapMode = TextureWrapMode.Clamp;
         
         texture.SetPixels(colourMap);
