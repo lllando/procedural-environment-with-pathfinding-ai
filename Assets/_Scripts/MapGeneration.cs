@@ -9,7 +9,8 @@ public class MapGeneration : MonoBehaviour
     public enum DrawMethod
     {
         NoiseMap,
-        ColourMap
+        ColourMap,
+        Mesh
     }
 
     public DrawMethod drawMethod;
@@ -31,6 +32,11 @@ public class MapGeneration : MonoBehaviour
 
     public int seed;
     public Vector2 offset;
+
+    [Range(1, 10)]
+    public float meshHeightMultiplier;
+
+    public AnimationCurve meshHeightCurve;
 
     public bool updateAutomatically;
 
@@ -65,6 +71,10 @@ public class MapGeneration : MonoBehaviour
         
         else if (drawMethod == DrawMethod.ColourMap)
             display.DrawTextureMap(TextureGeneration.TextureFromColourMap(colourMap, mapWidth, mapHeight));
+        
+        else if (drawMethod == DrawMethod.Mesh)
+            display.DrawMesh(MeshGeneration.GenerateTerrainMesh(noiseMap, meshHeightMultiplier, meshHeightCurve),
+                TextureGeneration.TextureFromColourMap(colourMap, mapWidth, mapHeight));
     }
 }
 
