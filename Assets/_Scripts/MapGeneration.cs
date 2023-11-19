@@ -5,6 +5,15 @@ using UnityEngine;
 
 public class MapGeneration : MonoBehaviour
 {
+
+    public enum DrawMethod
+    {
+        NoiseMap,
+        ColourMap
+    }
+
+    public DrawMethod drawMethod;
+    
     [Range(1, 1000)]
     public int mapWidth, mapHeight;
     
@@ -30,9 +39,32 @@ public class MapGeneration : MonoBehaviour
     public void GenerateMap()
     {
         float[,] noiseMap = NoiseGeneration.GenerateNoiseMap(mapWidth, mapHeight, seed, noiseScale, octaves, persistance, lacunarity, offset);
+
+        Color[] colourMap = new Color[mapWidth * mapHeight];
         
+        for (int y = 0; y < mapHeight; y++)
+        {
+            for (int x = 0; x < mapWidth; x++)
+            {
+                float currentHeight = noiseMap[x, y];
+                for (int i = 0; i < regions.Length; i++)
+                {
+                    if (currentHeight <= regions[i].height)
+                    {
+                        colourMap[y * mapWidth + x] = regions[i].colour;
+                        break;
+                    }
+                }
+            }
+        }
+
         DisplayMap display = FindFirstObjectByType<DisplayMap>();
-        display.DrawNoiseMap(noiseMap);
+        
+        if (drawMethod == DrawMethod.NoiseMap)
+            display.DrawTextureMap(TextureGeneration.TextureFromHeightMap(noiseMap));
+        
+        else if (drawMethod == DrawMethod.ColourMap)
+            display.DrawTextureMap(TextureGeneration.TextureFromColourMap(colourMap, mapWidth, mapHeight));
     }
 }
 

@@ -479,6 +479,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 496fc6adc68f8224fa3c632506e30396, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  drawMethod: 1
   mapWidth: 100
   mapHeight: 100
   noiseScale: 25
@@ -486,8 +487,15 @@ MonoBehaviour:
   persistance: 0.5
   lacunarity: 2
   seed: 35
-  offset: {x: 0.96, y: 0}
+  offset: {x: 0, y: 0}
   updateAutomatically: 1
+  regions:
+  - type: Water
+    height: 0.4
+    colour: {r: 0, g: 0.5900984, b: 1, a: 0}
+  - type: Sand
+    height: 1
+    colour: {r: 1, g: 0.8593202, b: 0, a: 0}
 --- !u!4 &1249032206
 Transform:
   m_ObjectHideFlags: 0
