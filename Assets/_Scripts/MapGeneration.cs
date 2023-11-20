@@ -76,7 +76,6 @@ public class MapGeneration : MonoBehaviour
             
             if (smoothingType == SmoothingType.Smooth) 
                 filterMode = FilterMode.Bilinear; // Set filter mode to bilinear as SmoothingType is set to smooth (Blend + Bilinear)
-            
         }
         
         for (int y = 0; y < mapHeight; y++)
