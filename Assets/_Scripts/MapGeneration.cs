@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class MapGeneration : MonoBehaviour
@@ -57,7 +58,10 @@ public class MapGeneration : MonoBehaviour
     public Gradient heightGradient;
     private FilterMode filterMode = FilterMode.Point;
 
-    private Dictionary<TerrainType, Terrain> terrainByType = new Dictionary<TerrainType, Terrain>();
+    public Dictionary<TerrainType, Terrain> terrainByType = new Dictionary<TerrainType, Terrain>();
+
+    public MeshData meshData;
+    private float[,] noiseMap;
     
     #region Component References
     public AssetGeneration assetGeneration;
@@ -66,11 +70,15 @@ public class MapGeneration : MonoBehaviour
     private void Awake()
     {
         InitializeTerrainGradientColours();
+        GenerateMap(); // Generate the map
+        
+        if (generateAssets)
+            assetGeneration.GenerateAssets(noiseMap, meshHeightMultiplier, meshHeightCurve, meshScale);
     }
 
     public void GenerateMap()
     {
-        float[,] noiseMap = NoiseGeneration.GenerateNoiseMap(mapWidth, mapHeight, seed, noiseScale, octaves, persistance, lacunarity, offset);
+        noiseMap = NoiseGeneration.GenerateNoiseMap(mapWidth, mapHeight, seed, noiseScale, octaves, persistance, lacunarity, offset);
 
         Color[] colourMap = new Color[mapWidth * mapHeight];
 
@@ -115,16 +123,12 @@ public class MapGeneration : MonoBehaviour
         else if (drawMethod == DrawMethod.Mesh)
         {
             // Generate the terrain mesh
-            MeshData meshData = MeshGeneration.GenerateTerrainMesh(noiseMap, meshHeightMultiplier, meshHeightCurve);
+            meshData = MeshGeneration.GenerateTerrainMesh(noiseMap, meshHeightMultiplier, meshHeightCurve);
             
             // Draw the mesh using a specific FilterMode setting that smooths the gradient
             display.DrawMesh(meshData, TextureGeneration.TextureFromColourMap(colourMap, mapWidth, mapHeight, filterMode));
-            
-            if (generateAssets)
-                assetGeneration.GenerateAssets(meshData, meshScale);
-            
-            
         }
+        
     }
 
     public void InitializeTerrainGradientColours()
@@ -141,7 +145,7 @@ public class MapGeneration : MonoBehaviour
 
             if (!terrainByType.ContainsKey(terrainTypes[i])) // Don't add a new terrain if one already exists with that key
             {
-                Terrain terrain = new Terrain(terrainTypes[i], colourKeys[i].color, (float)heightValue); // Create a new terrain object
+                Terrain terrain = new Terrain(terrainTypes[i], colourKeys[i].color, (float)heightValue,  assetGeneration.terrainAssets[i]); // Create a new terrain object
                 terrainByType.Add(terrainTypes[i], terrain); // Add the terrain object and terrain type to dictionary so it can be used later
             }
         }
@@ -165,13 +169,15 @@ public struct Terrain
     public TerrainType type;
     public Color colour;
     public float height;
+    public TerrainAsset terrainAsset;
     public int pathWeight;
 
-    public Terrain(TerrainType t, Color c, float h, int pw = 1)
+    public Terrain(TerrainType t, Color c, float h, TerrainAsset ta, int pw = 1)
     {
         type = t;
         colour = c;
         height = h;
+        terrainAsset = ta;
         pathWeight = pw;
     }
 }
