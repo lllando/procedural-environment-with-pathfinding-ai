@@ -44,6 +44,8 @@ public class MapGeneration : MonoBehaviour
     public int seed;
     public Vector2 offset;
 
+    public int meshScale;
+
     [Range(1, 10)]
     public float meshHeightMultiplier;
 
@@ -101,6 +103,7 @@ public class MapGeneration : MonoBehaviour
         }
 
         DisplayMap display = FindFirstObjectByType<DisplayMap>();
+        display.meshRenderer.gameObject.transform.localScale = new Vector3(meshScale, meshScale, meshScale);
         
         // Different logic based on what DrawMethod is set by the user in the inspector
         if (drawMethod == DrawMethod.NoiseMap)
@@ -118,7 +121,7 @@ public class MapGeneration : MonoBehaviour
             display.DrawMesh(meshData, TextureGeneration.TextureFromColourMap(colourMap, mapWidth, mapHeight, filterMode));
             
             if (generateAssets)
-                assetGeneration.GenerateAssets(meshData);
+                assetGeneration.GenerateAssets(meshData, meshScale);
             
             
         }
