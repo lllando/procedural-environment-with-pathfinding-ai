@@ -50,11 +50,16 @@ public class MapGeneration : MonoBehaviour
     public AnimationCurve meshHeightCurve;
 
     public bool updateAutomatically;
+    public bool generateAssets;
 
     public Gradient heightGradient;
     private FilterMode filterMode = FilterMode.Point;
 
-    private Dictionary<TerrainType, Terrain> terrainGradientColours = new Dictionary<TerrainType, Terrain>();
+    private Dictionary<TerrainType, Terrain> terrainByType = new Dictionary<TerrainType, Terrain>();
+    
+    #region Component References
+    public AssetGeneration assetGeneration;
+    #endregion
     
     private void Awake()
     {
@@ -84,7 +89,7 @@ public class MapGeneration : MonoBehaviour
             {
                 float currentHeight = noiseMap[x, y];
 
-                foreach (var t in terrainGradientColours)
+                foreach (var t in terrainByType)
                 {
                     if (currentHeight <= t.Value.height)
                     {
@@ -106,9 +111,16 @@ public class MapGeneration : MonoBehaviour
         
         else if (drawMethod == DrawMethod.Mesh)
         {
+            // Generate the terrain mesh
+            MeshData meshData = MeshGeneration.GenerateTerrainMesh(noiseMap, meshHeightMultiplier, meshHeightCurve);
+            
             // Draw the mesh using a specific FilterMode setting that smooths the gradient
-            display.DrawMesh(MeshGeneration.GenerateTerrainMesh(noiseMap, meshHeightMultiplier, meshHeightCurve), 
-                TextureGeneration.TextureFromColourMap(colourMap, mapWidth, mapHeight, filterMode));
+            display.DrawMesh(meshData, TextureGeneration.TextureFromColourMap(colourMap, mapWidth, mapHeight, filterMode));
+            
+            if (generateAssets)
+                assetGeneration.GenerateAssets(meshData);
+            
+            
         }
     }
 
@@ -124,10 +136,10 @@ public class MapGeneration : MonoBehaviour
             
             decimal heightValue = Decimal.Round((decimal)colourKeys[i].time, 2); // Round the time value to 2 decimal place so it can be used for height
 
-            if (!terrainGradientColours.ContainsKey(terrainTypes[i])) // Don't add a new terrain if one already exists with that key
+            if (!terrainByType.ContainsKey(terrainTypes[i])) // Don't add a new terrain if one already exists with that key
             {
                 Terrain terrain = new Terrain(terrainTypes[i], colourKeys[i].color, (float)heightValue); // Create a new terrain object
-                terrainGradientColours.Add(terrainTypes[i], terrain); // Add the terrain object and terrain type to dictionary so it can be used later
+                terrainByType.Add(terrainTypes[i], terrain); // Add the terrain object and terrain type to dictionary so it can be used later
             }
         }
     }
@@ -160,13 +172,3 @@ public struct Terrain
         pathWeight = pw;
     }
 }
-
-/*
-[Serializable]
-public struct TerrainType
-{
-    public string type;
-    public float height;
-    public Color colour;
-}
-*/
