@@ -1,0 +1,24 @@
+fileFormatVersion: 2
+guid: a7fc796ece8384243b1cc1bbff70ab7c
+labels:
+- Grass
+- Level
+- Lowpoly
+- Nature
+- Rocks
+- Terrain
+- Trees
+- World
+timeCreated: 1487909362
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 66322
+  packageName: Low-Poly Style Nature
+  packageVersion: 3.5
+  assetPath: Assets/Low-Poly Style Nature/Prefabs/LPN_Large_Rocks_Update_3.3.prefab
+  uploadId: 337660

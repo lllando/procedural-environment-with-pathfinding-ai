@@ -1,0 +1,24 @@
+fileFormatVersion: 2
+guid: c8f8863cc061a415b992361b53ed1005
+labels:
+- Grass
+- Level
+- Lowpoly
+- Nature
+- Rocks
+- Terrain
+- Trees
+- World
+timeCreated: 1482763661
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 66322
+  packageName: Low-Poly Style Nature
+  packageVersion: 3.5
+  assetPath: Assets/Low-Poly Style Nature/Prefabs/LPN_Details.011.prefab
+  uploadId: 337660
