@@ -14,10 +14,12 @@ public class NodeGrid : MonoBehaviour {
 
 	[SerializeField] private float nodeGizmosTransparency = 0.4f;
 
+	public Transform testObj;
+
 	void Awake() {
-		nodeDiameter = nodeRadius*2;
-		gridSizeX = Mathf.RoundToInt(gridWorldSize.x/nodeDiameter);
-		gridSizeY = Mathf.RoundToInt(gridWorldSize.y/nodeDiameter);
+		//		nodeDiameter = nodeRadius*2;
+		// gridSizeX = Mathf.RoundToInt(gridWorldSize.x/nodeDiameter);
+		// gridSizeY = Mathf.RoundToInt(gridWorldSize.y/nodeDiameter);
 		// CreateGrid();
 	}
 
@@ -38,35 +40,66 @@ public class NodeGrid : MonoBehaviour {
 	{
 		grid = new Node[meshData.meshWidth, meshData.meshHeight];
 		
-		nodeDiameter = nodeRadius*2;
-		gridSizeX = Mathf.RoundToInt(gridWorldSize.x/nodeDiameter);
-		gridSizeY = Mathf.RoundToInt(gridWorldSize.y/nodeDiameter);
+		nodeDiameter = nodeRadius * 2;
+		gridSizeX = meshData.meshWidth;
+		gridSizeY = meshData.meshHeight;
+		
+		// grid = new Node[gridSizeX, gridSizeY];
 
-		for (int y = 0; y < meshData.meshHeight; y++)
+		/*
+		for (int x = 0; x < gridSizeX; x++)
 		{
-			for (int x = 0; x < meshData.meshWidth; x++)
+
+			for (int y = 0; y < gridSizeY; y++)
 			{
-				Vector3 vertex = meshData.vertices[y * meshData.meshWidth + x];
-				// Debug.Log(vertex);
+				{
+					Vector3 vertex = meshData.vertices[y * meshData.meshWidth + x];
+					// Debug.Log(vertex);
+					float vertexHeight = vertex.y;
+					// bool walkable = !Physics.CheckSphere(vertex, 10f, unwalkableMask);
+
+					Collider[] objectCollisions = Physics.OverlapSphere(vertex, nodeRadius);
+					bool walkable = true;
+					foreach (var col in objectCollisions)
+					{
+						Debug.Log("Collider detected: " + col.name);
+						// Only spawn if there is not an asset already near the location
+						if (col.CompareTag("TerrainAsset"))
+							walkable = false;
+					}
+
+					Debug.Log("walkable is " + walkable);
+					grid[x, y] = new Node(walkable, vertex, x, y, vertexHeight);
+				}
+			}
+			*/
+
+		for (int y = 0; y < gridSizeY; y++)
+		{
+			for (int x = 0; x < gridSizeX; x++)
+			{
+				Vector3 vertex = meshData.vertices[y * gridSizeX + x];
 				float vertexHeight = vertex.y;
-				// bool walkable = !Physics.CheckSphere(vertex, 10f, unwalkableMask);
-				
+
 				Collider[] objectCollisions = Physics.OverlapSphere(vertex, nodeRadius);
 				bool walkable = true;
 				foreach (var col in objectCollisions)
 				{
-					Debug.Log("Collider detected: " + col.name);
 					// Only spawn if there is not an asset already near the location
 					if (col.CompareTag("TerrainAsset"))
 						walkable = false;
 				}
-				
-				Debug.Log("walkable is " + walkable);
-				grid[x, y] = new Node(walkable, vertex, x, y, vertexHeight);
-			}
-		}
-		
 
+				Vector3 vertexPosition = new Vector3(vertex.x, vertex.y, vertex.z);
+				// Vector3 vertexHeightRemoved = new Vector3(vertex.x, 1, vertex.z);
+				grid[x, y] = new Node(walkable, vertexPosition, x, y, vertexHeight);
+				// Debug.Log($"walkable ({walkable}) grid node created at [{x},{y}]");
+			}
+
+		}
+
+		Node n = NodeFromWorldPoint(testObj.position);
+		// Debug.Log($"TEST OBJ: walkable ({n.walkable}) grid node created at [{n.gridX},{n.gridY}] with world coords {n.worldPosition}");
 		/*
 		foreach (var v in meshData.vertices)
 		{
@@ -81,7 +114,7 @@ public class NodeGrid : MonoBehaviour {
 			grid[x, y] = new Node(walkable, nodePosition, x, y, vertexHeight);
 		}
 		*/
-		
+
 	}
 
 	public List<Node> GetNeighbours(Node node) {
@@ -105,7 +138,10 @@ public class NodeGrid : MonoBehaviour {
 	}
 	
 
-	public Node NodeFromWorldPoint(Vector3 worldPosition) {
+	public Node NodeFromWorldPoint(Vector3 worldPosition)
+	{
+		worldPosition.z *= -1; // Fix incorrect sign
+		
 		float percentX = (worldPosition.x + gridWorldSize.x/2) / gridWorldSize.x;
 		float percentY = (worldPosition.z + gridWorldSize.y/2) / gridWorldSize.y;
 		percentX = Mathf.Clamp01(percentX);
@@ -113,6 +149,7 @@ public class NodeGrid : MonoBehaviour {
 
 		int x = Mathf.RoundToInt((gridSizeX-1) * percentX);
 		int y = Mathf.RoundToInt((gridSizeY-1) * percentY);
+		// Debug.Log("nodepoint: " + x + " : " + y);
 		return grid[x,y];
 	}
 
@@ -130,7 +167,10 @@ public class NodeGrid : MonoBehaviour {
 				
 				if (path != null)
 					if (path.Contains(n))
+					{
 						Gizmos.color = pathColour;
+						// Debug.Log($"path drawn at [{n.gridX},{n.gridY}] with world coords {n.worldPosition}");
+					}
 				Gizmos.DrawCube(n.worldPosition, Vector3.one * (nodeDiameter-.1f));
 			}
 		}

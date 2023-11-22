@@ -68,8 +68,6 @@ public class MapGeneration : MonoBehaviour
     
     private void Awake()
     {
-        assetGeneration = GetComponent<AssetGeneration>();
-        
         InitializeTerrainGradientColours();
         GenerateMap(); // Generate the map
     }

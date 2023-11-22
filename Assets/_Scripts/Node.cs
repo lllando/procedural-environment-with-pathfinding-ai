@@ -8,8 +8,8 @@ public class Node {
     public int gridX;
     public int gridY;
 
-    public int gCost;
-    public int hCost;
+    public int gCost; // Distance from the starting node
+    public int hCost; // Distance from the end node
     public Node parent;
 
     public float meshVertexHeightAtNode;
@@ -22,6 +22,7 @@ public class Node {
         this.meshVertexHeightAtNode = meshVertexHeightAtNode;
     }
 
+    // F cost = G cost + H cost
     public int fCost {
         get {
             return gCost + hCost;
