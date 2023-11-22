@@ -20,7 +20,6 @@ public class Pathfinding : MonoBehaviour {
 
     void FindPath(Vector3 startPos, Vector3 targetPos)
     {
-        // Debug.Log("path 1");
         Node startNode = grid.NodeFromWorldPoint(startPos);
         Node targetNode = grid.NodeFromWorldPoint(targetPos);
 
@@ -29,18 +28,13 @@ public class Pathfinding : MonoBehaviour {
         openSet.Add(startNode);
 
         while (openSet.Count > 0) {
-            // Debug.Log("path 2 with count = " + openSet.Count);
             Node node = openSet[0];
             for (int i = 1; i < openSet.Count; i ++) {
-                // Debug.Log("here 1 with count = " + openSet.Count);
                 if (openSet[i].fCost < node.fCost || openSet[i].fCost == node.fCost) {
-                    // Debug.Log("here 2");
                     if (openSet[i].hCost < node.hCost)
                     {
-                        // Debug.Log("here 3");
                         node = openSet[i];
                     }
-                    // Debug.Log("path 3");
                 }
             }
 
@@ -48,7 +42,6 @@ public class Pathfinding : MonoBehaviour {
             closedSet.Add(node);
 
             if (node == targetNode) {
-                // Debug.Log("Path 4");
                 RetracePath(startNode,targetNode);
                 StopCoroutine(FollowPath());
                 StartCoroutine(FollowPath());
@@ -60,7 +53,6 @@ public class Pathfinding : MonoBehaviour {
                     continue;
                 }
 
-                // Debug.Log("Path 5");
                 int newCostToNeighbour = node.gCost + GetDistance(node, neighbour);
                 if (newCostToNeighbour < neighbour.gCost || !openSet.Contains(neighbour)) {
                     neighbour.gCost = newCostToNeighbour;
