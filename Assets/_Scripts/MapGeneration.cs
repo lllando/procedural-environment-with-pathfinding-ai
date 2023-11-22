@@ -53,7 +53,6 @@ public class MapGeneration : MonoBehaviour
     public AnimationCurve meshHeightCurve;
 
     public bool updateAutomatically;
-    public bool generateAssets;
 
     public Gradient heightGradient;
     private FilterMode filterMode = FilterMode.Point;
@@ -72,7 +71,7 @@ public class MapGeneration : MonoBehaviour
         InitializeTerrainGradientColours();
         GenerateMap(); // Generate the map
         
-        if (generateAssets)
+        if (assetGeneration.generateAssets)
             assetGeneration.GenerateAssets(noiseMap, meshHeightMultiplier, meshHeightCurve, meshScale);
     }
 
