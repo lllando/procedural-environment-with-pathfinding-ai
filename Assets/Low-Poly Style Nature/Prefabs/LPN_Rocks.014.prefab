@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 33000011802830988}
   - component: {fileID: 23000012579782530}
   - component: {fileID: -3140877298276071494}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: LPN_Rocks.014
   m_TagString: TerrainAsset
   m_Icon: {fileID: 0}

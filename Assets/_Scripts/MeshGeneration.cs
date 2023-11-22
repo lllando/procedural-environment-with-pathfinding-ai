@@ -8,6 +8,9 @@ public static class MeshGeneration
     {
         int width = heightMap.GetLength(0);
         int height = heightMap.GetLength(1);
+
+        Debug.Log("mesh data width = " + width);
+        
         float topLeftX = (width - 1) / -2f;
         float topLeftZ = (height - 1) / 2f;
 
@@ -39,6 +42,9 @@ public class MeshData
     public int[] triangles;
     public Vector2[] uvs;
 
+    public int meshWidth;
+    public int meshHeight;
+
     private int triangleIndex;
 
     public MeshData(int meshWidth, int meshHeight)
@@ -46,6 +52,9 @@ public class MeshData
         vertices = new Vector3[meshWidth * meshHeight];
         uvs = new Vector2[meshWidth * meshHeight];
         triangles = new int[(meshWidth - 1) * (meshHeight - 1) * 6];
+
+        this.meshWidth = meshWidth;
+        this.meshHeight = meshHeight;
     }
 
     public void AddTriangle(int a, int b, int c)
@@ -63,6 +72,8 @@ public class MeshData
         mesh.triangles = triangles;
         mesh.uv = uvs;
         mesh.RecalculateNormals();
+        
+        Debug.Log("vertices count = " + mesh.vertices.Length);
         return mesh;
     }
 }

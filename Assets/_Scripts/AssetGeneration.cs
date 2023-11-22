@@ -22,13 +22,21 @@ public class AssetGeneration : MonoBehaviour
 
     private bool isSpawnValid;
 
-    public void GenerateAssets(float[,] heightMap, float heightMultiplier, AnimationCurve heightCurve, int scale)
+    public void GenerateAssets(float[,] heightMap, float heightMultiplier, AnimationCurve heightCurve)
     {
+        GameObject spawnedAssets = GameObject.Find("PARENT SPAWNER");
+        if (spawnedAssets != null)
+        {
+            DestroyImmediate(spawnedAssets);
+        }
+        
         int width = heightMap.GetLength(0);
         int height = heightMap.GetLength(1);
 
         float topLeftX = (width - 1) / -2f;
         float topLeftZ = (height - 1) / 2f;
+
+        GameObject parentSpawner = new GameObject("PARENT SPAWNER");
 
         for (int n = 0; n < numberOfAssetsToTrySpawn; n++)
         {
@@ -86,8 +94,8 @@ public class AssetGeneration : MonoBehaviour
                     if (terrainObject == null)
                         return;
 
-                    GameObject spawnObj = Instantiate(terrainObject, objectPosition * scale, Quaternion.identity);
-                    spawnObj.transform.localScale *= 10;
+                    GameObject spawnObj = Instantiate(terrainObject, objectPosition * MapGeneration.meshScale, Quaternion.identity, parentSpawner.transform);
+                    spawnObj.transform.localScale *= MapGeneration.meshScale;
                 }
             }
         }

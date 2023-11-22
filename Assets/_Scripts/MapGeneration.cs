@@ -45,7 +45,7 @@ public class MapGeneration : MonoBehaviour
     public int seed;
     public Vector2 offset;
 
-    public int meshScale;
+    public static int meshScale = 1;
 
     [Range(1, 10)]
     public float meshHeightMultiplier;
@@ -63,7 +63,7 @@ public class MapGeneration : MonoBehaviour
     private float[,] noiseMap;
     
     #region Component References
-    private AssetGeneration assetGeneration;
+    public AssetGeneration assetGeneration;
     #endregion
     
     private void Awake()
@@ -72,9 +72,6 @@ public class MapGeneration : MonoBehaviour
         
         InitializeTerrainGradientColours();
         GenerateMap(); // Generate the map
-        
-        if (assetGeneration.generateAssets)
-            assetGeneration.GenerateAssets(noiseMap, meshHeightMultiplier, meshHeightCurve, meshScale);
     }
 
     public void GenerateMap()
@@ -112,7 +109,7 @@ public class MapGeneration : MonoBehaviour
         }
 
         DisplayMap display = FindFirstObjectByType<DisplayMap>();
-        display.meshRenderer.gameObject.transform.localScale = new Vector3(meshScale, meshScale, meshScale);
+        display.meshRenderer.transform.localScale *= meshScale;
         
         // Different logic based on what DrawMethod is set by the user in the inspector
         if (drawMethod == DrawMethod.NoiseMap)
@@ -128,6 +125,14 @@ public class MapGeneration : MonoBehaviour
             
             // Draw the mesh using a specific FilterMode setting that smooths the gradient
             display.DrawMesh(meshData, TextureGeneration.TextureFromColourMap(colourMap, mapWidth, mapHeight, filterMode));
+            
+            if (assetGeneration.generateAssets)
+                assetGeneration.GenerateAssets(noiseMap, meshHeightMultiplier, meshHeightCurve);
+            
+            NodeGrid nodeGrid = FindFirstObjectByType<NodeGrid>();
+            nodeGrid.CreateGridBasedOnVertices(meshData);
+            
+            
         }
         
     }

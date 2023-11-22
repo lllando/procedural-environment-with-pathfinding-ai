@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4000010860470046}
   - component: {fileID: 33000011037913900}
   - component: {fileID: 23000011782536288}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: LPN_Trees.017
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 4000011766696350}
   - component: {fileID: 33000011397934802}
   - component: {fileID: 23000010919213376}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: LPN_Details.029
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -177,7 +177,7 @@ GameObject:
   - component: {fileID: 4000011236871780}
   - component: {fileID: 33000013512506060}
   - component: {fileID: 23000011701610844}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: LPN_Details.026
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -260,7 +260,7 @@ GameObject:
   - component: {fileID: 4000013615912112}
   - component: {fileID: 33000011011868062}
   - component: {fileID: 23000011405415408}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: LPN_Rocks.024
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -343,7 +343,7 @@ GameObject:
   - component: {fileID: 4000013665790598}
   - component: {fileID: 33000013114464096}
   - component: {fileID: 23000012872873064}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: LPN_Campfire
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -426,7 +426,7 @@ GameObject:
   - component: {fileID: 4000010444513400}
   - component: {fileID: 33000013700349312}
   - component: {fileID: 23000014013919878}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: LPN_Details.027
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -509,7 +509,7 @@ GameObject:
   - component: {fileID: 4000012981514062}
   - component: {fileID: 33000011057145606}
   - component: {fileID: 23000012501946500}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: LPN_Details.030
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -592,7 +592,7 @@ GameObject:
   - component: {fileID: 4000011047468670}
   - component: {fileID: 33000010430037394}
   - component: {fileID: 23000013255687674}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: LPN_Details.028
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -674,7 +674,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4000013393697146}
   - component: {fileID: 5548163348408224347}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: LPN_Camp
   m_TagString: TerrainAsset
   m_Icon: {fileID: 0}

@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4000011119420554}
   - component: {fileID: -7993837814355604458}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: LPN_Large_Rocks_Update_3.3
   m_TagString: TerrainAsset
   m_Icon: {fileID: 0}
@@ -71,7 +71,7 @@ GameObject:
   - component: {fileID: 4000011765871616}
   - component: {fileID: 33000012299892874}
   - component: {fileID: 23000012821327068}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: LPN_Large_Rocks.001
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -154,7 +154,7 @@ GameObject:
   - component: {fileID: 4000012306951422}
   - component: {fileID: 33000013183610352}
   - component: {fileID: 23000010864423502}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: LPN_Large_Rocks.003
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -237,7 +237,7 @@ GameObject:
   - component: {fileID: 4000011869426760}
   - component: {fileID: 33000012831573168}
   - component: {fileID: 23000011911622312}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: LPN_Large_Rocks.002
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -320,7 +320,7 @@ GameObject:
   - component: {fileID: 4000010404707830}
   - component: {fileID: 33000011797110118}
   - component: {fileID: 23000010680347994}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: LPN_Large_Rocks.006
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -403,7 +403,7 @@ GameObject:
   - component: {fileID: 4000014196784264}
   - component: {fileID: 33000011279789732}
   - component: {fileID: 23000010386628308}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: LPN_Large_Rocks.004
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -486,7 +486,7 @@ GameObject:
   - component: {fileID: 4000014253926702}
   - component: {fileID: 33000011938252766}
   - component: {fileID: 23000011728061614}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: LPN_Large_Rocks.005
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 33000012841128178}
   - component: {fileID: 23000012045508636}
   - component: {fileID: -3006849428331001755}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: LPN_Trees.001
   m_TagString: TerrainAsset
   m_Icon: {fileID: 0}
