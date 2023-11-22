@@ -128,7 +128,7 @@ public class MapGeneration : MonoBehaviour
                 assetGeneration.GenerateAssets(noiseMap, meshHeightMultiplier, meshHeightCurve);
             
             NodeGrid nodeGrid = FindFirstObjectByType<NodeGrid>();
-            nodeGrid.CreateGridBasedOnVertices(meshData);
+            nodeGrid.CreateGridBasedOnVertices(meshData, terrainByType, meshHeightCurve);
             
             
         }

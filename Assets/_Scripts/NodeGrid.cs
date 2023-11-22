@@ -15,14 +15,9 @@ public class NodeGrid : MonoBehaviour {
 	[SerializeField] private float nodeGizmosTransparency = 0.4f;
 
 	public Transform testObj;
-
-	void Awake() {
-		//		nodeDiameter = nodeRadius*2;
-		// gridSizeX = Mathf.RoundToInt(gridWorldSize.x/nodeDiameter);
-		// gridSizeY = Mathf.RoundToInt(gridWorldSize.y/nodeDiameter);
-		// CreateGrid();
-	}
-
+	
+	[SerializeField] private GameObject markAsUnwalkable;
+	
 	void CreateGrid() {
 		grid = new Node[gridSizeX,gridSizeY];
 		Vector3 worldBottomLeft = transform.position - Vector3.right * gridWorldSize.x/2 - Vector3.forward * gridWorldSize.y/2;
@@ -36,7 +31,7 @@ public class NodeGrid : MonoBehaviour {
 		}
 	}
 
-	public void CreateGridBasedOnVertices(MeshData meshData)
+	public void CreateGridBasedOnVertices(MeshData meshData, Dictionary<TerrainType, Terrain> terrainByType, AnimationCurve heightCurve)
 	{
 		grid = new Node[meshData.meshWidth, meshData.meshHeight];
 		
@@ -74,15 +69,29 @@ public class NodeGrid : MonoBehaviour {
 			}
 			*/
 
+		GameObject unwalkableSpawner = new GameObject("UNWALKABLE SPAWNER");
+
+		
 		for (int y = 0; y < gridSizeY; y++)
 		{
 			for (int x = 0; x < gridSizeX; x++)
 			{
 				Vector3 vertex = meshData.vertices[y * gridSizeX + x];
 				float vertexHeight = vertex.y;
-
-				Collider[] objectCollisions = Physics.OverlapSphere(vertex, nodeRadius);
 				bool walkable = true;
+				
+				foreach (var t in terrainByType)
+				{
+					if (t.Value.type == TerrainType.Water && heightCurve.Evaluate(vertexHeight) < t.Value.height)
+					{
+						Debug.Log("Unwalkable terrain type detected");
+						GameObject unwalkableObject = Instantiate(markAsUnwalkable, vertex * MapGeneration.meshScale, Quaternion.identity, unwalkableSpawner.transform);
+						unwalkableObject.transform.localScale *= MapGeneration.meshScale;
+						walkable = false;
+					}
+				}
+				
+				Collider[] objectCollisions = Physics.OverlapSphere(vertex, nodeRadius);
 				foreach (var col in objectCollisions)
 				{
 					// Only spawn if there is not an asset already near the location

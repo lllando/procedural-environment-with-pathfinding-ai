@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 3850856053477144356}
   - component: {fileID: 9056290778411668239}
   - component: {fileID: 4608482094765329665}
-  m_Layer: 0
-  m_Name: TestObj
-  m_TagString: Untagged
+  m_Layer: 11
+  m_Name: UnwalkableObj
+  m_TagString: TerrainAsset
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -61,7 +61,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 911b99c50e0e516438b324673ed0c2d7, type: 2}
+  - {fileID: 2100000, guid: fb9c6893d0a8ad642a616a2fdfbd3338, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

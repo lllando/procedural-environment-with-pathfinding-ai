@@ -50,9 +50,12 @@ public class AssetGeneration : MonoBehaviour
                 currentTerrainAsset = terrainAssets[i];
                 previousTerrainAsset = terrainAssets[previousIndex];
                 
+                
                 // Don't try to spawn in regions that should not have assets in them
                 if (currentTerrainAsset.type == TerrainType.Water || currentTerrainAsset.type == TerrainType.Snow)
+                { 
                     continue;
+                }
                 
                 // Try spawning
                 isSpawnValid = false;
@@ -87,7 +90,7 @@ public class AssetGeneration : MonoBehaviour
                         isSpawnValid = false;
                         break;
                     }
-
+                    
                     int terrainObjectNum = Random.Range(0, currentTerrainAsset.assets.Count);
                     GameObject terrainObject = currentTerrainAsset.assets[terrainObjectNum];
 
