@@ -63,11 +63,13 @@ public class MapGeneration : MonoBehaviour
     private float[,] noiseMap;
     
     #region Component References
-    public AssetGeneration assetGeneration;
+    private AssetGeneration assetGeneration;
     #endregion
     
     private void Awake()
     {
+        assetGeneration = GetComponent<AssetGeneration>();
+        
         InitializeTerrainGradientColours();
         GenerateMap(); // Generate the map
         
@@ -144,7 +146,7 @@ public class MapGeneration : MonoBehaviour
 
             if (!terrainByType.ContainsKey(terrainTypes[i])) // Don't add a new terrain if one already exists with that key
             {
-                Terrain terrain = new Terrain(terrainTypes[i], colourKeys[i].color, (float)heightValue,  assetGeneration.terrainAssets[i]); // Create a new terrain object
+                Terrain terrain = new Terrain(terrainTypes[i], colourKeys[i].color, (float)heightValue); // Create a new terrain object
                 terrainByType.Add(terrainTypes[i], terrain); // Add the terrain object and terrain type to dictionary so it can be used later
             }
         }
@@ -168,15 +170,13 @@ public struct Terrain
     public TerrainType type;
     public Color colour;
     public float height;
-    public TerrainAsset terrainAsset;
     public int pathWeight;
 
-    public Terrain(TerrainType t, Color c, float h, TerrainAsset ta, int pw = 1)
+    public Terrain(TerrainType t, Color c, float h, int pw = 1)
     {
         type = t;
         colour = c;
         height = h;
-        terrainAsset = ta;
         pathWeight = pw;
     }
 }
