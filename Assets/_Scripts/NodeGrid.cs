@@ -17,6 +17,7 @@ public class NodeGrid : MonoBehaviour {
 	public Transform testObj;
 	
 	[SerializeField] private GameObject markAsUnwalkable;
+	private float minUnwalkableHeight = 0.005f;
 	
 	void CreateGrid() {
 		grid = new Node[gridSizeX,gridSizeY];
@@ -69,6 +70,12 @@ public class NodeGrid : MonoBehaviour {
 			}
 			*/
 
+		GameObject spawnedUnwalkableObjects = GameObject.Find("UNWALKABLE SPAWNER");
+		if (spawnedUnwalkableObjects != null)
+		{
+			DestroyImmediate(spawnedUnwalkableObjects);
+		}
+		
 		GameObject unwalkableSpawner = new GameObject("UNWALKABLE SPAWNER");
 
 		
@@ -82,9 +89,9 @@ public class NodeGrid : MonoBehaviour {
 				
 				foreach (var t in terrainByType)
 				{
-					if (t.Value.type == TerrainType.Water && heightCurve.Evaluate(vertexHeight) < t.Value.height)
+					if (t.Value.type == TerrainType.Water && heightCurve.Evaluate(vertexHeight) < minUnwalkableHeight)
 					{
-						Debug.Log("Unwalkable terrain type detected");
+						Debug.Log($"Compared evaluated h = {heightCurve.Evaluate(vertexHeight)} to terrain value height of {t.Value.height}");
 						GameObject unwalkableObject = Instantiate(markAsUnwalkable, vertex * MapGeneration.meshScale, Quaternion.identity, unwalkableSpawner.transform);
 						unwalkableObject.transform.localScale *= MapGeneration.meshScale;
 						walkable = false;
