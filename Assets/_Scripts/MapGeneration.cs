@@ -129,10 +129,10 @@ public class MapGeneration : MonoBehaviour
             
             NodeGrid nodeGrid = FindFirstObjectByType<NodeGrid>();
             nodeGrid.CreateGridBasedOnVertices(meshData, terrainByType, meshHeightCurve);
-            
-            
+
+            CheckNavMesh checkNavMesh = FindFirstObjectByType<CheckNavMesh>();
+            checkNavMesh.CheckAccessibilityAndSpawnObjects(noiseMap, meshHeightMultiplier, meshHeightCurve);
         }
-        
     }
 
     public void InitializeTerrainGradientColours()
