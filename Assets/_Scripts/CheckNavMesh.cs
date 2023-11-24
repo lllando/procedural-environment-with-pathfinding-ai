@@ -16,7 +16,8 @@ public class CheckNavMesh : MonoBehaviour
     public List<GameObject> objectsToSpawnUsingNavmesh = new List<GameObject>();
     
     private int numberOfNavMeshSpawnedObjects = 20;
-    private float range = 50f;
+    private float range = 30f;
+    private float overlapRadius = 1f;
     private float checkRange = 25f; // Maximum distance to search for a NavMesh point
 
     private List<NavMeshPath> validPathsToPlayer = new List<NavMeshPath>();
@@ -61,7 +62,7 @@ public class CheckNavMesh : MonoBehaviour
             GameObject obj = objectsToSpawnUsingNavmesh[randomObject];
 
             Vector3 randomDir = Random.insideUnitSphere * range;
-            randomDir += transform.position;
+            randomDir += player.transform.position;
             
             Debug.Log("Range: " + range + ", Random Direction: " + randomDir);
             
@@ -71,24 +72,30 @@ public class CheckNavMesh : MonoBehaviour
             {
                 Debug.Log(obj.name + " is on the NavMesh at " + hit.position);
                 Vector3 finalPos = hit.position;
-                
+
                 NavMeshPath pathToPlayer = new NavMeshPath();
                 if (IsAccessibleByPlayer(playerHit.position, finalPos, pathToPlayer))
                 {
-                    validPathsToPlayer.Add(pathToPlayer);
                     Debug.Log("Valid path found");
 
-                    GameObject spawnedObject = Instantiate(obj, finalPos, Quaternion.identity, navMeshAssetSpawner.transform);
+
+                    Collider[] objectCollisions = Physics.OverlapSphere(finalPos, overlapRadius);
+
+                    bool shouldSpawn = true;
+                    foreach (var col in objectCollisions)
+                    {
+                        // Only spawn if there is not an asset near the location
+                        if (col.CompareTag("TerrainAsset"))
+                            shouldSpawn = false;
+                    }
+
+                    if (shouldSpawn)
+                    {
+                        GameObject spawnedObject = Instantiate(obj, finalPos, Quaternion.identity, navMeshAssetSpawner.transform);
+                        Debug.Log($"{spawnedObject} spawned at {finalPos}");
+                        validPathsToPlayer.Add(pathToPlayer);
+                    }
                 }
-                else
-                {
-                    Debug.Log("No valid path found");
-                }
-                
-            }
-            else
-            {
-                Debug.Log(obj.name + " is NOT on the NavMesh.");
             }
         }
     }
