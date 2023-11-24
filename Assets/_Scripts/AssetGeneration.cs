@@ -23,11 +23,13 @@ public class AssetGeneration : MonoBehaviour
 
     private bool isSpawnValid;
 
+    private string parentObjectName = "OBJECT SPAWNER";
+
 
 
     public void GenerateAssets(float[,] heightMap, float heightMultiplier, AnimationCurve heightCurve)
     {
-        GameObject spawnedAssets = GameObject.Find("PARENT SPAWNER");
+        GameObject spawnedAssets = GameObject.Find(parentObjectName);
         if (spawnedAssets != null)
         {
             DestroyImmediate(spawnedAssets);
@@ -39,7 +41,7 @@ public class AssetGeneration : MonoBehaviour
         float topLeftX = (width - 1) / -2f;
         float topLeftZ = (height - 1) / 2f;
 
-        GameObject parentSpawner = new GameObject("PARENT SPAWNER");
+        GameObject parentAssetSpawner = new GameObject(parentObjectName);
 
         for (int n = 0; n < numberOfAssetsToTrySpawn; n++)
         {
@@ -102,7 +104,7 @@ public class AssetGeneration : MonoBehaviour
                         return;
 
                     GameObject spawnObj = Instantiate(terrainObject, objectPosition * MapGeneration.meshScale,
-                        Quaternion.identity, parentSpawner.transform);
+                        Quaternion.identity, parentAssetSpawner.transform);
                     spawnObj.transform.localScale *= MapGeneration.meshScale;
                 }
             }

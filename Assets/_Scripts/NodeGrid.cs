@@ -19,6 +19,9 @@ public class NodeGrid : MonoBehaviour {
 	[SerializeField] private GameObject markAsUnwalkable;
 	private float minUnwalkableHeight = 0.005f;
 	
+	private string parentObjectName = "UNWALKABLE SPAWNER";
+
+	
 	void CreateGrid() {
 		grid = new Node[gridSizeX,gridSizeY];
 		Vector3 worldBottomLeft = transform.position - Vector3.right * gridWorldSize.x/2 - Vector3.forward * gridWorldSize.y/2;
@@ -70,13 +73,13 @@ public class NodeGrid : MonoBehaviour {
 			}
 			*/
 
-		GameObject spawnedUnwalkableObjects = GameObject.Find("UNWALKABLE SPAWNER");
+		GameObject spawnedUnwalkableObjects = GameObject.Find(parentObjectName);
 		if (spawnedUnwalkableObjects != null)
 		{
 			DestroyImmediate(spawnedUnwalkableObjects);
 		}
 		
-		GameObject unwalkableSpawner = new GameObject("UNWALKABLE SPAWNER");
+		GameObject unwalkableSpawner = new GameObject(parentObjectName);
 
 		
 		for (int y = 0; y < gridSizeY; y++)

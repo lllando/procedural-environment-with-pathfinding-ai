@@ -17,7 +17,13 @@ public class DisplayMap : MonoBehaviour
     public void DrawMesh(MeshData meshData, Texture2D texture)
     {
         // Use 'shared' version of variables so that meshes can be generated from the editor too
-        meshFiler.sharedMesh = meshData.CreateMesh();
+        Mesh mesh = meshData.CreateMesh();
+        meshFiler.sharedMesh = mesh;
         meshRenderer.sharedMaterial.mainTexture = texture;
+        
+        // Update meshcollider
+        MeshCollider meshCollider = meshRenderer.GetComponent<MeshCollider>();
+        meshCollider.sharedMesh = mesh;
+
     }
 }

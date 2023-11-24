@@ -9,98 +9,87 @@ using Random = UnityEngine.Random;
 public class CheckNavMesh : MonoBehaviour
 {
     public NavMeshSurface navMeshSurface;
-
-    public Transform navMeshSpawnedAsset;
     
     public Transform player;
-    public Transform target;
-    
-    private Vector3 objectPosition;    
-    
-    private int numberOfNavMeshSpawnedAssets = 1;
-    public float range = 10f;
-    private float maxDistance = 5.0f; // Maximum distance to search for a NavMesh point
+    private Vector3 targetNavMeshPosition;
 
-
-    private NavMeshPath pathToTarget;
+    public List<GameObject> objectsToSpawnUsingNavmesh = new List<GameObject>();
     
+    private int numberOfNavMeshSpawnedObjects = 20;
+    private float range = 50f;
+    private float checkRange = 25f; // Maximum distance to search for a NavMesh point
+
+    private List<NavMeshPath> validPathsToPlayer = new List<NavMeshPath>();
+    
+    private string parentObjectName = "NAVMESH OBJECT SPAWNER";
+
+    public GameObject testObject;
+
     public void CheckAccessibilityAndSpawnObjects(float[,] heightMap, float heightMultiplier, AnimationCurve heightCurve)
     {
+        navMeshSurface.BuildNavMesh();
+
         int width = heightMap.GetLength(0);
         int height = heightMap.GetLength(1);
 
         float topLeftX = (width - 1) / -2f;
         float topLeftZ = (height - 1) / 2f;
         
-        /*
-        for (int j = 0; j < numberOfNavMeshSpawnedAssets; j++)
-        {
-            int randomX = Random.Range(0, width);
-            int randomY = Random.Range(0, height);
-            Debug.Log("spawn at " + randomX + ", " + randomY);
-
-            float currentHeight = heightMap[randomX, randomY];
-            
-            objectPosition = new Vector3(topLeftX + randomX,
-                heightCurve.Evaluate(heightMap[randomX, randomY]) * heightMultiplier, topLeftZ - randomY);
-
-            pathToPlayer = new NavMeshPath();
-            if (NavMesh.CalculatePath(player.position, target.position, NavMesh.AllAreas, pathToPlayer))
-            {
-                Debug.Log("Valid path found");
-                Instantiate(navMeshSpawnedAsset, objectPosition, Quaternion.identity);
-            }
-            else
-            {
-                Debug.Log("Not spawning. No valid path found");
-            }
-            Debug.Log("path corners size = " + pathToPlayer.corners.Length);
-        }
-        */
-        
         NavMeshHit playerHit;
-        bool isOnNavMesh = NavMesh.SamplePosition(player.position, out playerHit, maxDistance, NavMesh.AllAreas);
+        bool isOnNavMesh = NavMesh.SamplePosition(player.position, out playerHit, checkRange, NavMesh.AllAreas);
 
         if (isOnNavMesh)
         {
             Debug.Log(player.name + " is on the NavMesh at " + playerHit.position);
-            // Instantiate(navMeshSpawnedAsset, hit.position, Quaternion.identity);
-
-            // Optionally, you can move the object to the nearest NavMesh position
-            // objectToCheck.position = hit.position;
         }
         else
         {
             Debug.Log(player.name + " is NOT on the NavMesh.");
         }
-        
-        NavMeshHit targetHit;
-        bool isOnNavMesh2 = NavMesh.SamplePosition(target.position, out targetHit, maxDistance, NavMesh.AllAreas);
 
-        if (isOnNavMesh2)
+        GameObject spawnedNavMeshAssetSpawner = GameObject.Find(parentObjectName);
+        if (spawnedNavMeshAssetSpawner != null)
         {
-            Debug.Log(target.name + " is on the NavMesh at " + targetHit.position);
-            // Instantiate(navMeshSpawnedAsset, hit2.position, Quaternion.identity);
-
-            // Optionally, you can move the object to the nearest NavMesh position
-            // objectToCheck.position = hit.position;
-        }
-        else
-        {
-            Debug.Log(target.name + " is NOT on the NavMesh.");
+            DestroyImmediate(spawnedNavMeshAssetSpawner);
         }
         
-        
+        GameObject navMeshAssetSpawner = new GameObject(parentObjectName);
 
-        pathToTarget = new NavMeshPath();
-        if (IsAccessibleByPlayer(playerHit.position, targetHit.position, pathToTarget))
+        for (int i = 0; i < numberOfNavMeshSpawnedObjects; i++)
         {
-            Debug.Log("Valid path found");
-        }
+            int randomObject = Random.Range(0, objectsToSpawnUsingNavmesh.Count);
+            GameObject obj = objectsToSpawnUsingNavmesh[randomObject];
 
-        else
-        {
-            Debug.Log("No valid path found");
+            Vector3 randomDir = Random.insideUnitSphere * range;
+            randomDir += transform.position;
+            
+            Debug.Log("Range: " + range + ", Random Direction: " + randomDir);
+            
+            bool isOnNavMesh2 = NavMesh.SamplePosition(randomDir, out NavMeshHit hit, checkRange, NavMesh.AllAreas);
+
+            if (isOnNavMesh2)
+            {
+                Debug.Log(obj.name + " is on the NavMesh at " + hit.position);
+                Vector3 finalPos = hit.position;
+                
+                NavMeshPath pathToPlayer = new NavMeshPath();
+                if (IsAccessibleByPlayer(playerHit.position, finalPos, pathToPlayer))
+                {
+                    validPathsToPlayer.Add(pathToPlayer);
+                    Debug.Log("Valid path found");
+
+                    GameObject spawnedObject = Instantiate(obj, finalPos, Quaternion.identity, navMeshAssetSpawner.transform);
+                }
+                else
+                {
+                    Debug.Log("No valid path found");
+                }
+                
+            }
+            else
+            {
+                Debug.Log(obj.name + " is NOT on the NavMesh.");
+            }
         }
     }
 
@@ -108,7 +97,7 @@ public class CheckNavMesh : MonoBehaviour
     {
         if (NavMesh.CalculatePath(sourcePosition, targetPosition, NavMesh.AllAreas, path))
         {
-            Debug.Log("path corners size = " + pathToTarget.corners.Length);
+            Debug.Log("path corners size = " + path.corners.Length);
             return path.status == NavMeshPathStatus.PathComplete;
         }
         return false;
@@ -117,7 +106,10 @@ public class CheckNavMesh : MonoBehaviour
     private void OnDrawGizmos()
     {
         // DrawPath(pathToTarget, Color.red);
-        DrawPath(pathToTarget, Color.yellow);
+        foreach (var p in validPathsToPlayer)
+        {
+            DrawPath(p, Color.yellow);
+        }
     }
 
     private void DrawPath(NavMeshPath path, Color color)

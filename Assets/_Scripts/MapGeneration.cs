@@ -52,8 +52,6 @@ public class MapGeneration : MonoBehaviour
 
     public AnimationCurve meshHeightCurve;
 
-    public bool updateAutomatically;
-
     public Gradient heightGradient;
     private FilterMode filterMode = FilterMode.Point;
 

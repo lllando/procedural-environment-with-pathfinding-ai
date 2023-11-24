@@ -10,11 +10,7 @@ public class MapGenerationEditor : Editor
         
         if (DrawDefaultInspector()) // Check if any value was changed
         {
-            if (!mapGeneration.updateAutomatically)
-                return;
             
-            mapGeneration.InitializeTerrainGradientColours();
-            mapGeneration.GenerateMap(); // Generate the map
         }
 
         if (GUILayout.Button("Generate")) // If editor button 'Generate' is clicked
