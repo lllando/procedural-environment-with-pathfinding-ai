@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class NpcBehaviour : MonoBehaviour
 {
-    enum FiniteStateMachine
+    enum NPCFiniteStateMachine
     {
         Idle,
         Patrol,
@@ -12,11 +12,32 @@ public class NpcBehaviour : MonoBehaviour
         Shoot
     }
 
-    private FiniteStateMachine currentState;
+    [SerializeField] private Material idleMat;
+    [SerializeField] private Material patrolMat;
+    [SerializeField] private Material chaseMat;
+    [SerializeField] private Material shootMat;
 
+    private MeshRenderer meshRenderer;
+    
+    private NPCFiniteStateMachine currentState;
+
+    private Pathfinding pathfinding;
+
+    [SerializeField] private Transform player;
+    [SerializeField] private Transform patrolPoint;
+
+    private float chaseDistance = 10f;
+    private float shootingDistance = 2f;
+    
     private void Awake()
     {
-        throw new NotImplementedException();
+        meshRenderer = GetComponent<MeshRenderer>();
+        pathfinding = FindFirstObjectByType<Pathfinding>();
+    }
+
+    private void Start()
+    {
+        StartCoroutine(UpdateStateToIdle());
     }
 
     private void Update()
@@ -28,38 +49,79 @@ public class NpcBehaviour : MonoBehaviour
     {
         switch (currentState)
         {
-            case (FiniteStateMachine.Idle):
+            case (NPCFiniteStateMachine.Idle):
                 Idle();
                 break;
-            case (FiniteStateMachine.Patrol):
+            case (NPCFiniteStateMachine.Patrol):
                 Patrol();
                 break;
-            case (FiniteStateMachine.Chase):
+            case (NPCFiniteStateMachine.Chase):
                 Chase();
                 break;
-            case (FiniteStateMachine.Shoot):
+            case (NPCFiniteStateMachine.Shoot):
                 Shoot();
                 break;
         }
     }
 
+    #region Individual State Logic
     private void Idle()
     {
-        throw new NotImplementedException();
     }
 
     private void Patrol()
     {
-        throw new NotImplementedException();
+        pathfinding.FindPath(transform.position, patrolPoint.position);
+        
+        if (Vector3.Distance(transform.position, player.position) < chaseDistance)
+        {
+            currentState = UpdateStateToChase();
+        }
     }
 
     private void Chase()
     {
-        throw new NotImplementedException();
+        pathfinding.FindPath(transform.position, player.position);
+        
+        // Check if the player is very close
+        if (Vector3.Distance(transform.position, player.position) < shootingDistance)
+        {
+            currentState = UpdateStateToShoot();
+        }
     }
     
     private void Shoot()
     {
-        throw new NotImplementedException();
+        
     }
+    #endregion
+
+    #region Update States
+    private IEnumerator UpdateStateToIdle()
+    {
+        meshRenderer.material = idleMat;
+        currentState = NPCFiniteStateMachine.Idle;
+        yield return new WaitForSeconds(5f);
+        currentState = UpdateStateToPatrol();
+    }
+    
+    private NPCFiniteStateMachine UpdateStateToPatrol()
+    {
+        meshRenderer.material = patrolMat;
+        return NPCFiniteStateMachine.Patrol;
+    }
+    
+    private NPCFiniteStateMachine UpdateStateToChase()
+    {
+        meshRenderer.material = chaseMat;
+        // navmeshAgent
+        return NPCFiniteStateMachine.Chase;
+    }
+    
+    private NPCFiniteStateMachine UpdateStateToShoot()
+    {
+        meshRenderer.material = shootMat;
+        return NPCFiniteStateMachine.Shoot;
+    }
+    #endregion
 }

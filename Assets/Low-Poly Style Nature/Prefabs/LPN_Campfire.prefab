@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 33000011953290714}
   - component: {fileID: 23000012161714790}
   - component: {fileID: -4501809446906717901}
+  - component: {fileID: 6342226931849646832}
   m_Layer: 11
   m_Name: LPN_Campfire
   m_TagString: TerrainAsset
@@ -106,3 +107,19 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300014, guid: e4f5221417155426cac91dcb85524f5a, type: 3}
+--- !u!208 &6342226931849646832
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000011421643954}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.317, y: 0.231, z: 0.34500003}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0.021000002, y: 0.231, z: -0.001}
+  m_TimeToStationary: 0.5

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 33000011690486884}
   - component: {fileID: 23000011541813328}
   - component: {fileID: 3808460999925428759}
+  - component: {fileID: -7076614465030956897}
   m_Layer: 11
   m_Name: LPN_Mountain_05
   m_TagString: TerrainAsset
@@ -106,3 +107,19 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300008, guid: e0afce497cd3a4fa0980dba5f8256946, type: 3}
+--- !u!208 &-7076614465030956897
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000013561699340}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 1.5510001, y: 0.72800004, z: 2}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0.1, y: 0.72800004, z: 0}
+  m_TimeToStationary: 0.5

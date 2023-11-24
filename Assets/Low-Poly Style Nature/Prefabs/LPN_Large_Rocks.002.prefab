@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 33000013880861822}
   - component: {fileID: 23000010536835850}
   - component: {fileID: 9187454983826127669}
+  - component: {fileID: -7952506867274618750}
   m_Layer: 11
   m_Name: LPN_Large_Rocks.002
   m_TagString: TerrainAsset
@@ -106,3 +107,19 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300002, guid: d2331550a5a5e4450b2c29bb8533d61a, type: 3}
+--- !u!208 &-7952506867274618750
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000011271640420}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 1, y: 0.869, z: 1}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0.869, z: 0}
+  m_TimeToStationary: 0.5

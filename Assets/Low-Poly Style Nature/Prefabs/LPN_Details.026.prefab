@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 33000014216829124}
   - component: {fileID: 23000013348991486}
   - component: {fileID: -5669172127161227968}
+  - component: {fileID: -8310848019322888309}
   m_Layer: 11
   m_Name: LPN_Details.026
   m_TagString: TerrainAsset
@@ -106,3 +107,19 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300002, guid: e4f5221417155426cac91dcb85524f5a, type: 3}
+--- !u!208 &-8310848019322888309
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000013455125044}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.30600002, y: 0.20700002, z: 0.291}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: 0, y: 0.20700002, z: -0.015000001}
+  m_TimeToStationary: 0.5

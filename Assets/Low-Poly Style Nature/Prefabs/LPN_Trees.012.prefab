@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 33000012869979510}
   - component: {fileID: 23000011489207506}
   - component: {fileID: 6055522962714403015}
+  - component: {fileID: 6174700044103741841}
   m_Layer: 11
   m_Name: LPN_Trees.012
   m_TagString: TerrainAsset
@@ -106,3 +107,19 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300104, guid: 12d2ed6417ce14085ac856a645edee45, type: 3}
+--- !u!208 &6174700044103741841
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000011122748342}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.582, y: 1.715, z: 0.532}
+  m_MoveThreshold: 0.1
+  m_Carve: 1
+  m_CarveOnlyStationary: 1
+  m_Center: {x: -0.171, y: 1.715, z: 0.34600002}
+  m_TimeToStationary: 0.5
