@@ -238,6 +238,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   seeker: {fileID: 915158634}
   target: {fileID: 1845032196}
+  grid: {fileID: 0}
   moveSpeed: 0.05
 --- !u!4 &524473671
 Transform:
@@ -647,12 +648,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 739cb3462b131c444853bb5f8dfb2b54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  idleMat: {fileID: 2100000, guid: 8e60de4bd258c9b4da12e1ba62ff69e9, type: 2}
-  patrolMat: {fileID: 2100000, guid: 59dfe4c11baf9aa428cd6a4cbb750a1f, type: 2}
-  chaseMat: {fileID: 2100000, guid: fe46993114fcf5f42ab65349d81844af, type: 2}
-  shootMat: {fileID: 2100000, guid: b61dcb9a45f205147af061caada9964f, type: 2}
+  idleMat: {fileID: 0}
+  patrolMat: {fileID: 0}
+  chaseMat: {fileID: 0}
+  shootMat: {fileID: 0}
   player: {fileID: 1845032196}
-  patrolPoint: {fileID: 1957591146}
+  destination: {fileID: 0}
 --- !u!195 &915158636
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -663,7 +664,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 0.5
-  m_Speed: 1
+  m_Speed: 0.25
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
@@ -949,6 +950,7 @@ MonoBehaviour:
   - {fileID: 8807627489210325522, guid: 313c4c1eba5f2494c89d14ec765d3f49, type: 3}
   - {fileID: 8807627489210325522, guid: 943581cc612da034086f7e3a85f9c4be, type: 3}
   testObject: {fileID: 0}
+  spawnedPickupObjects: []
 --- !u!64 &1221311552
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -1235,7 +1237,7 @@ Transform:
   m_GameObject: {fileID: 1845032191}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 31.587, y: 6.42, z: -10.617}
+  m_LocalPosition: {x: 11.98, y: 8.68, z: 27.93}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

@@ -26,6 +26,8 @@ public class CheckNavMesh : MonoBehaviour
 
     public GameObject testObject;
 
+    public List<GameObject> spawnedPickupObjects = new List<GameObject>();
+
     public void CheckAccessibilityAndSpawnObjects(float[,] heightMap, float heightMultiplier, AnimationCurve heightCurve)
     {
         navMeshSurface.BuildNavMesh();
@@ -92,6 +94,7 @@ public class CheckNavMesh : MonoBehaviour
                     if (shouldSpawn)
                     {
                         GameObject spawnedObject = Instantiate(obj, finalPos, Quaternion.identity, navMeshAssetSpawner.transform);
+                        spawnedPickupObjects.Add(spawnedObject);
                         Debug.Log($"{spawnedObject} spawned at {finalPos}");
                         validPathsToPlayer.Add(pathToPlayer);
                     }

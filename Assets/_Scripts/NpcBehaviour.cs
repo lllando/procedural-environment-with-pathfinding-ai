@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class NpcBehaviour : MonoBehaviour
 {
@@ -24,19 +26,24 @@ public class NpcBehaviour : MonoBehaviour
     private Pathfinding pathfinding;
 
     [SerializeField] private Transform player;
-    [SerializeField] private Transform patrolPoint;
+    [SerializeField] private Transform destination;
 
     private float chaseDistance = 10f;
     private float shootingDistance = 2f;
+
+    private CheckNavMesh checkNavMesh;
+    private List<GameObject> pickupObjects;
     
     private void Awake()
     {
         meshRenderer = GetComponent<MeshRenderer>();
         pathfinding = FindFirstObjectByType<Pathfinding>();
+        checkNavMesh = FindFirstObjectByType<CheckNavMesh>();
     }
 
     private void Start()
     {
+        pickupObjects = checkNavMesh.spawnedPickupObjects;   
         StartCoroutine(UpdateStateToIdle());
     }
 
@@ -56,7 +63,7 @@ public class NpcBehaviour : MonoBehaviour
                 Patrol();
                 break;
             case (NPCFiniteStateMachine.Chase):
-                Chase();
+                // Chase();
                 break;
             case (NPCFiniteStateMachine.Shoot):
                 Shoot();
@@ -82,6 +89,7 @@ public class NpcBehaviour : MonoBehaviour
                 break;
             case (NPCFiniteStateMachine.Patrol):
                 meshRenderer.material = patrolMat;
+                destination = GetRandomPickupObject();
                 break;
             case (NPCFiniteStateMachine.Chase):
                 meshRenderer.material = chaseMat;
@@ -103,7 +111,7 @@ public class NpcBehaviour : MonoBehaviour
 
     private void Patrol()
     {
-        pathfinding.FindPath(transform.position, patrolPoint.position);
+        pathfinding.FindPath(transform.position, destination.position);
         
         if (Vector3.Distance(transform.position, player.position) < chaseDistance)
         {
@@ -127,6 +135,12 @@ public class NpcBehaviour : MonoBehaviour
         
     }
     #endregion
+
+    private Transform GetRandomPickupObject()
+    {
+        int randomPickupObject = Random.Range(0, pickupObjects.Count);
+        return pickupObjects[randomPickupObject].transform;
+    }
     
 
 }

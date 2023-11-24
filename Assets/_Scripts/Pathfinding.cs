@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class Pathfinding : MonoBehaviour {
 
     public Transform seeker, target;
-    NodeGrid grid;
+    public NodeGrid grid;
 
     [SerializeField] private float moveSpeed = 0.5f;
     private float waypointTolerance = 0.1f;
