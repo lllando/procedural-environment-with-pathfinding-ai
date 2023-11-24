@@ -6,12 +6,18 @@ public class Pathfinding : MonoBehaviour {
 
     public Transform seeker, target;
     public NodeGrid grid;
-
-    [SerializeField] private float moveSpeed = 0.5f;
+    
+    private float moveSpeed = 0.01f;
+    private float maxSpeed = 0.01f;
+    
     private float waypointTolerance = 0.1f;
+    private Rigidbody seekerRb;
+
+
 
     void Awake() {
-        grid = GetComponent<NodeGrid> ();
+        grid = GetComponent<NodeGrid>();
+        seekerRb = seeker.GetComponent<Rigidbody>();
     }
     
     public void FindPath(Vector3 startPos, Vector3 targetPos)

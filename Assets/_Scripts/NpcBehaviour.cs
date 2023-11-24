@@ -26,10 +26,11 @@ public class NpcBehaviour : MonoBehaviour
     private Pathfinding pathfinding;
 
     [SerializeField] private Transform player;
-    [SerializeField] private Transform destination;
+    private Transform destination;
 
     private float chaseDistance = 10f;
     private float shootingDistance = 2f;
+    private float patrolPointDistance = 2f;
 
     private CheckNavMesh checkNavMesh;
     private List<GameObject> pickupObjects;
@@ -44,7 +45,8 @@ public class NpcBehaviour : MonoBehaviour
     private void Start()
     {
         pickupObjects = checkNavMesh.spawnedPickupObjects;   
-        StartCoroutine(UpdateStateToIdle());
+        // StartCoroutine(EnteredIdleState());
+        currentState = UpdateState(NPCFiniteStateMachine.Patrol);
     }
 
     private void Update()
@@ -63,7 +65,7 @@ public class NpcBehaviour : MonoBehaviour
                 Patrol();
                 break;
             case (NPCFiniteStateMachine.Chase):
-                // Chase();
+                Chase();
                 break;
             case (NPCFiniteStateMachine.Shoot):
                 Shoot();
@@ -72,10 +74,9 @@ public class NpcBehaviour : MonoBehaviour
     }
     
     #region Update States
-    private IEnumerator UpdateStateToIdle()
+    private IEnumerator EnteredIdleState()
     {
         meshRenderer.material = idleMat;
-        currentState = NPCFiniteStateMachine.Idle;
         yield return new WaitForSeconds(5f);
         currentState = UpdateState(NPCFiniteStateMachine.Patrol);
     }
@@ -85,7 +86,7 @@ public class NpcBehaviour : MonoBehaviour
         switch (newState)
         {
             case (NPCFiniteStateMachine.Idle):
-                meshRenderer.material = idleMat;
+                StartCoroutine(EnteredIdleState());
                 break;
             case (NPCFiniteStateMachine.Patrol):
                 meshRenderer.material = patrolMat;
@@ -112,7 +113,12 @@ public class NpcBehaviour : MonoBehaviour
     private void Patrol()
     {
         pathfinding.FindPath(transform.position, destination.position);
-        
+
+        if (Vector3.Distance(transform.position, destination.position) < patrolPointDistance)
+        {
+            // destination = GetRandomPickupObject();
+            currentState = UpdateState(NPCFiniteStateMachine.Idle);
+        }
         if (Vector3.Distance(transform.position, player.position) < chaseDistance)
         {
             currentState = UpdateState(NPCFiniteStateMachine.Chase);
@@ -121,9 +127,15 @@ public class NpcBehaviour : MonoBehaviour
 
     private void Chase()
     {
+        // Check whether the player is in shoot range
+        if (Vector3.Distance(transform.position, player.position) > chaseDistance)
+        {
+            currentState = UpdateState(NPCFiniteStateMachine.Patrol);
+        }
+        
         pathfinding.FindPath(transform.position, player.position);
         
-        // Check if the player is very close
+        // Check whether the player is in shoot range
         if (Vector3.Distance(transform.position, player.position) < shootingDistance)
         {
             currentState = UpdateState(NPCFiniteStateMachine.Shoot);
@@ -132,7 +144,11 @@ public class NpcBehaviour : MonoBehaviour
     
     private void Shoot()
     {
-        
+        // Check whether the player is in shoot range
+        if (Vector3.Distance(transform.position, player.position) > shootingDistance)
+        {
+            currentState = UpdateState(NPCFiniteStateMachine.Chase);
+        }
     }
     #endregion
 
