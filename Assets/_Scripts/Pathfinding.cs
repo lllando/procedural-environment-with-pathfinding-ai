@@ -13,11 +13,7 @@ public class Pathfinding : MonoBehaviour {
     void Awake() {
         grid = GetComponent<NodeGrid> ();
     }
-
-    void Update() {
-        // FindPath(seeker.position, target.position);
-    }
-
+    
     public void FindPath(Vector3 startPos, Vector3 targetPos)
     {
         Node startNode = grid.NodeFromWorldPoint(startPos);

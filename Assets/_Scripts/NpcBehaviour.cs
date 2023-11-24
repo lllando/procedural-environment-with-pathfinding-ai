@@ -42,10 +42,10 @@ public class NpcBehaviour : MonoBehaviour
 
     private void Update()
     {
-        CheckState();
+        RunStateLogic();
     }
 
-    private void CheckState()
+    private void RunStateLogic()
     {
         switch (currentState)
         {
@@ -63,10 +63,42 @@ public class NpcBehaviour : MonoBehaviour
                 break;
         }
     }
+    
+    #region Update States
+    private IEnumerator UpdateStateToIdle()
+    {
+        meshRenderer.material = idleMat;
+        currentState = NPCFiniteStateMachine.Idle;
+        yield return new WaitForSeconds(5f);
+        currentState = UpdateState(NPCFiniteStateMachine.Patrol);
+    }
+
+    private NPCFiniteStateMachine UpdateState(NPCFiniteStateMachine newState)
+    {
+        switch (newState)
+        {
+            case (NPCFiniteStateMachine.Idle):
+                meshRenderer.material = idleMat;
+                break;
+            case (NPCFiniteStateMachine.Patrol):
+                meshRenderer.material = patrolMat;
+                break;
+            case (NPCFiniteStateMachine.Chase):
+                meshRenderer.material = chaseMat;
+                break;
+            case (NPCFiniteStateMachine.Shoot):
+                meshRenderer.material = shootMat;
+                break;
+        }
+
+        return newState;
+    }
+    #endregion
 
     #region Individual State Logic
     private void Idle()
     {
+        
     }
 
     private void Patrol()
@@ -75,7 +107,7 @@ public class NpcBehaviour : MonoBehaviour
         
         if (Vector3.Distance(transform.position, player.position) < chaseDistance)
         {
-            currentState = UpdateStateToChase();
+            currentState = UpdateState(NPCFiniteStateMachine.Chase);
         }
     }
 
@@ -86,7 +118,7 @@ public class NpcBehaviour : MonoBehaviour
         // Check if the player is very close
         if (Vector3.Distance(transform.position, player.position) < shootingDistance)
         {
-            currentState = UpdateStateToShoot();
+            currentState = UpdateState(NPCFiniteStateMachine.Shoot);
         }
     }
     
@@ -95,33 +127,6 @@ public class NpcBehaviour : MonoBehaviour
         
     }
     #endregion
+    
 
-    #region Update States
-    private IEnumerator UpdateStateToIdle()
-    {
-        meshRenderer.material = idleMat;
-        currentState = NPCFiniteStateMachine.Idle;
-        yield return new WaitForSeconds(5f);
-        currentState = UpdateStateToPatrol();
-    }
-    
-    private NPCFiniteStateMachine UpdateStateToPatrol()
-    {
-        meshRenderer.material = patrolMat;
-        return NPCFiniteStateMachine.Patrol;
-    }
-    
-    private NPCFiniteStateMachine UpdateStateToChase()
-    {
-        meshRenderer.material = chaseMat;
-        // navmeshAgent
-        return NPCFiniteStateMachine.Chase;
-    }
-    
-    private NPCFiniteStateMachine UpdateStateToShoot()
-    {
-        meshRenderer.material = shootMat;
-        return NPCFiniteStateMachine.Shoot;
-    }
-    #endregion
 }
