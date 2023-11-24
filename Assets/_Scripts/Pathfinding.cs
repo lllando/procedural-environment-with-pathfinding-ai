@@ -68,6 +68,11 @@ public class Pathfinding : MonoBehaviour {
         }
     }
 
+    public void ClearPath()
+    {
+        grid.path.Clear();
+    }
+
     void RetracePath(Node startNode, Node endNode) {
         List<Node> path = new List<Node>();
         Node currentNode = endNode;
@@ -91,7 +96,7 @@ public class Pathfinding : MonoBehaviour {
         return 14*dstX + 10 * (dstY-dstX);
     }
     
-    IEnumerator FollowPath()
+    private IEnumerator FollowPath()
     {
         if (grid.path == null || grid.path.Count == 0)
         {
@@ -116,7 +121,8 @@ public class Pathfinding : MonoBehaviour {
 
             // Move the seeker towards the target position.
             Vector3 moveDirection = (targetPosition - seeker.position).normalized;
-            seeker.position += moveDirection * moveSpeed * Time.deltaTime;
+            Vector3 velocity = moveDirection * moveSpeed * Time.deltaTime;
+            seeker.position += velocity;
 
             // Check if we are close enough to the waypoint.
             if (Vector3.Distance(seeker.position, targetPosition) < waypointTolerance)
