@@ -21,6 +21,7 @@ public class NpcBehaviour : MonoBehaviour
     [SerializeField] private Material chaseMat;
     [SerializeField] private Material shootMat;
 
+    [SerializeField] private TextMeshProUGUI idText;
     [SerializeField] private TextMeshProUGUI stateText;
     [SerializeField] private TextMeshProUGUI healthText;
 
@@ -55,8 +56,6 @@ public class NpcBehaviour : MonoBehaviour
         meshRenderer = GetComponent<MeshRenderer>();
         pathfinding = FindFirstObjectByType<Pathfinding>();
         checkNavMesh = FindFirstObjectByType<CheckNavMesh>();
-        
-        
 
         lookAtPlayer = player.GetChild(0);
     }
@@ -64,7 +63,10 @@ public class NpcBehaviour : MonoBehaviour
     private void Start()
     {
         pickupObjects = checkNavMesh.spawnedPickupObjects;
-        UpdateHealthVisual();
+        
+        UpdateHealthDisplay();
+        idText.text = this.gameObject.name;
+        
         // StartCoroutine(EnteredIdleState());
         currentState = UpdateState(NPCFiniteStateMachine.Patrol);
     }
@@ -157,6 +159,12 @@ public class NpcBehaviour : MonoBehaviour
 
     private void Chase()
     {
+        if (player == null)
+        {
+            UpdateState(NPCFiniteStateMachine.Patrol);
+            return;
+        }
+        
         AimAt(player.position);
 
         // Check whether the player is in shoot range
@@ -176,6 +184,12 @@ public class NpcBehaviour : MonoBehaviour
     
     private void Shoot()
     {
+        if (player == null)
+        {
+            UpdateState(NPCFiniteStateMachine.Patrol);
+            return;
+        }
+        
         pathfinding.ClearPath();
 
         if (shootCooldown > 0)
@@ -183,7 +197,7 @@ public class NpcBehaviour : MonoBehaviour
             shootCooldown -= Time.deltaTime;
         }
         
-        AimAt(player.position);
+        AimAt(player.position); // Aim at the player
 
         if (CanShoot())
         {
@@ -222,15 +236,15 @@ public class NpcBehaviour : MonoBehaviour
     {
         health -= damage;
 
-        UpdateHealthVisual();
+        UpdateHealthDisplay();
+        
         if (health <= 0)
         {
             Die();
         }
-
     }
 
-    private void UpdateHealthVisual()
+    private void UpdateHealthDisplay()
     {
         healthText.text = health.ToString();
         healthText.color = Color.Lerp(Color.red, Color.green, health / 100f);

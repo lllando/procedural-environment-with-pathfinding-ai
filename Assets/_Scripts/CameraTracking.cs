@@ -11,6 +11,9 @@ public class CameraTracking : MonoBehaviour
 
     private void Update()
     {
+        if (trackingTransform == null)
+            return;
+        
         transform.position = trackingTransform.position + offset;
     }
 }

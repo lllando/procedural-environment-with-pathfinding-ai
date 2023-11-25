@@ -18,10 +18,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private Transform shootTowards;
 
+    private int health = 100;
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
         mainCamera = Camera.main;
+        
+        PlayerHud.Instance.UpdateHealth(health);
     }
 
     void Update()
@@ -60,12 +64,28 @@ public class PlayerController : MonoBehaviour
         bullet.UpdateBullet(shootTowards);
     }
     
+    private void TakeDamage(int damage)
+    {
+        health -= damage;
+
+        PlayerHud.Instance.UpdateHealth(health);
+        
+        if (health <= 0)
+        {
+            Die();
+        }
+    }
+    
+    private void Die()
+    {
+        Destroy(this.gameObject);
+    }
+    
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("PLAYER COLLIDED");
         if (other.CompareTag("NPCBullet"))
         {
-            Debug.Log("Hit by NPC");
+            TakeDamage(10);
         }
     }
 }
