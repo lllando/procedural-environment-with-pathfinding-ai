@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class Pathfinding : MonoBehaviour {
 
-    public Transform seeker, target;
+    public Transform seeker;
     public NodeGrid grid;
     
     private float moveSpeed = 0.01f;

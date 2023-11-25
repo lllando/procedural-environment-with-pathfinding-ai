@@ -67,6 +67,11 @@ public class NpcBehaviour : MonoBehaviour
 
     private int pickupCounter = 0;
 
+    private float customGravity = 9.81f;
+    private float raycastLength = 5f;
+
+    [SerializeField] private LayerMask terrainLayerMask;
+
     public enum TakeDamageType
     {
         SymmetricalUniform, // Use random number generation
@@ -79,7 +84,7 @@ public class NpcBehaviour : MonoBehaviour
     private void Awake()
     {
         meshRenderer = GetComponent<MeshRenderer>();
-        pathfinding = FindFirstObjectByType<Pathfinding>();
+        pathfinding = GetComponent<Pathfinding>();
         checkNavMesh = FindFirstObjectByType<CheckNavMesh>();
 
         lookAtPlayer = player.GetChild(0);
@@ -99,7 +104,19 @@ public class NpcBehaviour : MonoBehaviour
 
     private void Update()
     {
+        FixSlopeMovement();
         RunStateLogic();
+    }
+
+    private void FixSlopeMovement()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, -Vector3.up, out hit, Mathf.Infinity, terrainLayerMask))
+        {
+            // Set the NPC to be on the ground with a slight y offset so it is does not get stuck
+            transform.position = new Vector3(transform.position.x, hit.point.y + 1f, transform.position.z);
+            // objectTransform.up = hit.normal; // Used to adjust the rotation of the NPC based on the terrain it is on 
+        }
     }
 
     private void RunStateLogic()
@@ -125,6 +142,7 @@ public class NpcBehaviour : MonoBehaviour
     private IEnumerator EnteredIdleState()
     {
         meshRenderer.material = idleMat;
+        
         yield return new WaitForSeconds(5f);
         currentState = UpdateState(NPCFiniteStateMachine.Patrol);
     }
@@ -169,14 +187,17 @@ public class NpcBehaviour : MonoBehaviour
 
     private void Patrol()
     {
-        Debug.Log("In patrol state");
+        if (destination == null)
+        {
+            destination = GetRandomPickupObject();
+        }
+        
         AimAt(destination.position);
 
         pathfinding.FindPath(transform.position, destination.position);
 
         if (Vector3.Distance(transform.position, destination.position) < patrolPointDistance)
         {
-            // destination = GetRandomPickupObject();
             pickupCounter++;
             pickupCounterText.text = pickupCounter.ToString();
 

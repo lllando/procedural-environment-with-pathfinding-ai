@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -7,7 +8,7 @@ public class NodeGrid : MonoBehaviour {
 	public LayerMask unwalkableMask;
 	public Vector2 gridWorldSize;
 	public float nodeRadius;
-	Node[,] grid;
+	private Node[,] grid;
 
 	float nodeDiameter;
 	int gridSizeX, gridSizeY;
@@ -21,19 +22,7 @@ public class NodeGrid : MonoBehaviour {
 	
 	private string parentObjectName = "UNWALKABLE SPAWNER";
 
-	
-	void CreateGrid() {
-		grid = new Node[gridSizeX,gridSizeY];
-		Vector3 worldBottomLeft = transform.position - Vector3.right * gridWorldSize.x/2 - Vector3.forward * gridWorldSize.y/2;
-
-		for (int x = 0; x < gridSizeX; x ++) {
-			for (int y = 0; y < gridSizeY; y ++) {
-				Vector3 worldPoint = worldBottomLeft + Vector3.right * (x * nodeDiameter + nodeRadius) + Vector3.forward * (y * nodeDiameter + nodeRadius);
-				bool walkable = !(Physics.CheckSphere(worldPoint,nodeRadius,unwalkableMask));
-				grid[x,y] = new Node(walkable,worldPoint, x,y);
-			}
-		}
-	}
+	public List<Node> path = new List<Node>();
 
 	public void CreateGridBasedOnVertices(MeshData meshData, Dictionary<TerrainType, Terrain> terrainByType, AnimationCurve heightCurve)
 	{
@@ -43,36 +32,6 @@ public class NodeGrid : MonoBehaviour {
 		gridSizeX = meshData.meshWidth;
 		gridSizeY = meshData.meshHeight;
 		
-		// grid = new Node[gridSizeX, gridSizeY];
-
-		/*
-		for (int x = 0; x < gridSizeX; x++)
-		{
-
-			for (int y = 0; y < gridSizeY; y++)
-			{
-				{
-					Vector3 vertex = meshData.vertices[y * meshData.meshWidth + x];
-					// Debug.Log(vertex);
-					float vertexHeight = vertex.y;
-					// bool walkable = !Physics.CheckSphere(vertex, 10f, unwalkableMask);
-
-					Collider[] objectCollisions = Physics.OverlapSphere(vertex, nodeRadius);
-					bool walkable = true;
-					foreach (var col in objectCollisions)
-					{
-						Debug.Log("Collider detected: " + col.name);
-						// Only spawn if there is not an asset already near the location
-						if (col.CompareTag("TerrainAsset"))
-							walkable = false;
-					}
-
-					Debug.Log("walkable is " + walkable);
-					grid[x, y] = new Node(walkable, vertex, x, y, vertexHeight);
-				}
-			}
-			*/
-
 		GameObject spawnedUnwalkableObjects = GameObject.Find(parentObjectName);
 		if (spawnedUnwalkableObjects != null)
 		{
@@ -171,9 +130,8 @@ public class NodeGrid : MonoBehaviour {
 		// Debug.Log("nodepoint: " + x + " : " + y);
 		return grid[x,y];
 	}
-
-	public List<Node> path;
-	void OnDrawGizmos() {
+	
+	void OnDrawGizmosSelected() {
 		Gizmos.DrawWireCube(transform.position,new Vector3(gridWorldSize.x,1,gridWorldSize.y));
 
 		if (grid != null) {

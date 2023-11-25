@@ -124,9 +124,12 @@ public class MapGeneration : MonoBehaviour
             
             if (assetGeneration.generateAssets)
                 assetGeneration.GenerateAssets(noiseMap, meshHeightMultiplier, meshHeightCurve);
+
+            // NodeGrid nodeGrid = FindFirstObjectByType<NodeGrid>();
+            NodeGrid[] nodeGrids = Resources.FindObjectsOfTypeAll<NodeGrid>();
             
-            NodeGrid nodeGrid = FindFirstObjectByType<NodeGrid>();
-            nodeGrid.CreateGridBasedOnVertices(meshData, terrainByType, meshHeightCurve);
+            foreach(var nodeGrid in nodeGrids)
+                nodeGrid.CreateGridBasedOnVertices(meshData, terrainByType, meshHeightCurve);
 
             CheckNavMesh checkNavMesh = FindFirstObjectByType<CheckNavMesh>();
             checkNavMesh.CheckAccessibilityAndSpawnObjects(noiseMap, meshHeightMultiplier, meshHeightCurve);
