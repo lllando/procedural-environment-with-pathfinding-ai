@@ -49,7 +49,8 @@ public class NpcBehaviour : MonoBehaviour
     [SerializeField] private Transform shootPoint;
     [SerializeField] private GameObject bulletPrefab;
 
-    private float health = 100f;
+    private float health = 10000f;
+    private double lambdaValueForDamageTaken = 0.3; // Smaller lambda value = skew to higher damage values
     
     private void Awake()
     {
@@ -231,13 +232,16 @@ public class NpcBehaviour : MonoBehaviour
     {
         return shootCooldown <= 0f;
     }
-
-    private void TakeDamage(int damage)
+    
+    private void TakeDamage()
     {
+        int damage = CalculateDistributions.ExponentialDistribution(lambdaValueForDamageTaken, 1);
         health -= damage;
+        
+        Debug.Log($"Took {damage} damage. Health is now at {health}");
 
         UpdateHealthDisplay();
-        
+    
         if (health <= 0)
         {
             Die();
@@ -259,7 +263,7 @@ public class NpcBehaviour : MonoBehaviour
     {
         if (other.CompareTag("PlayerBullet"))
         {
-            TakeDamage(25);
+            TakeDamage();
         }
     }
 }

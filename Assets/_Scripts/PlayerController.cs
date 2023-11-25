@@ -85,7 +85,7 @@ public class PlayerController : MonoBehaviour
     {
         if (other.CompareTag("NPCBullet"))
         {
-            TakeDamage(10);
+            TakeDamage(1);
         }
     }
 }
