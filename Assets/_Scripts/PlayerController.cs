@@ -52,12 +52,20 @@ public class PlayerController : MonoBehaviour
         {
             shootTowards.position = raycastHit.point;
         }
-        // transform.LookAt(shootTowards);
     }
 
     private void Shoot()
     {
         PlayerBulletController bullet = Instantiate(bulletPrefab, shootPoint.position, transform.rotation).GetComponent<PlayerBulletController>();
         bullet.UpdateBullet(shootTowards);
+    }
+    
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log("PLAYER COLLIDED");
+        if (other.CompareTag("NPCBullet"))
+        {
+            Debug.Log("Hit by NPC");
+        }
     }
 }

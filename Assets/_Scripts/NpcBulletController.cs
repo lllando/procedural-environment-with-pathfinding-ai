@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyBulletController : MonoBehaviour
+public class NpcBulletController : MonoBehaviour
 {
     private Rigidbody rb;
 
@@ -21,6 +21,9 @@ public class EnemyBulletController : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("NPC"))
+            return;
+
+        if (other.CompareTag("PlayerBullet"))
             return;
         
         Destroy(this.gameObject);

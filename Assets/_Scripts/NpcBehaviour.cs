@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
+using UnityEditor.Rendering;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -18,6 +20,9 @@ public class NpcBehaviour : MonoBehaviour
     [SerializeField] private Material patrolMat;
     [SerializeField] private Material chaseMat;
     [SerializeField] private Material shootMat;
+
+    [SerializeField] private TextMeshProUGUI stateText;
+    [SerializeField] private TextMeshProUGUI healthText;
 
     private MeshRenderer meshRenderer;
     
@@ -42,19 +47,24 @@ public class NpcBehaviour : MonoBehaviour
 
     [SerializeField] private Transform shootPoint;
     [SerializeField] private GameObject bulletPrefab;
+
+    private float health = 100f;
     
     private void Awake()
     {
         meshRenderer = GetComponent<MeshRenderer>();
         pathfinding = FindFirstObjectByType<Pathfinding>();
         checkNavMesh = FindFirstObjectByType<CheckNavMesh>();
+        
+        
 
         lookAtPlayer = player.GetChild(0);
     }
 
     private void Start()
     {
-        pickupObjects = checkNavMesh.spawnedPickupObjects;   
+        pickupObjects = checkNavMesh.spawnedPickupObjects;
+        UpdateHealthVisual();
         // StartCoroutine(EnteredIdleState());
         currentState = UpdateState(NPCFiniteStateMachine.Patrol);
     }
@@ -96,16 +106,24 @@ public class NpcBehaviour : MonoBehaviour
         switch (newState)
         {
             case (NPCFiniteStateMachine.Idle):
+                stateText.text = "Idle";
+                stateText.color = idleMat.color;
                 StartCoroutine(EnteredIdleState());
                 break;
             case (NPCFiniteStateMachine.Patrol):
+                stateText.text = "Patrol";
+                stateText.color = patrolMat.color;
                 meshRenderer.material = patrolMat;
                 destination = GetRandomPickupObject();
                 break;
             case (NPCFiniteStateMachine.Chase):
+                stateText.text = "Chase";
+                stateText.color = chaseMat.color;
                 meshRenderer.material = chaseMat;
                 break;
             case (NPCFiniteStateMachine.Shoot):
+                stateText.text = "Shoot";
+                stateText.color = shootMat.color;
                 meshRenderer.material = shootMat;
                 break;
         }
@@ -171,7 +189,7 @@ public class NpcBehaviour : MonoBehaviour
         {
             shootCooldown = 1f / fireRate;
 
-            EnemyBulletController bullet = Instantiate(bulletPrefab, shootPoint.position, transform.rotation).GetComponent<EnemyBulletController>();
+            NpcBulletController bullet = Instantiate(bulletPrefab, shootPoint.position, transform.rotation).GetComponent<NpcBulletController>();
             bullet.UpdateBullet(lookAtPlayer);
         }
         // Check whether the player is in shoot range
@@ -199,6 +217,35 @@ public class NpcBehaviour : MonoBehaviour
     {
         return shootCooldown <= 0f;
     }
-    
 
+    private void TakeDamage(int damage)
+    {
+        health -= damage;
+
+        UpdateHealthVisual();
+        if (health <= 0)
+        {
+            Die();
+        }
+
+    }
+
+    private void UpdateHealthVisual()
+    {
+        healthText.text = health.ToString();
+        healthText.color = Color.Lerp(Color.red, Color.green, health / 100f);
+    }
+
+    private void Die()
+    {
+        Destroy(this.gameObject);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("PlayerBullet"))
+        {
+            TakeDamage(25);
+        }
+    }
 }

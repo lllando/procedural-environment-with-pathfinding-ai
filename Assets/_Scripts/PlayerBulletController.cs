@@ -21,6 +21,9 @@ public class PlayerBulletController : MonoBehaviour
     {
         if (other.CompareTag("Player"))
             return;
+
+        if (other.CompareTag("NPCBullet"))
+            return;
         
         Destroy(this.gameObject);
     }
