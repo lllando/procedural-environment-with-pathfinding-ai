@@ -8,6 +8,7 @@ TagManager:
   - NPC
   - NPCBullet
   - PlayerBullet
+  - Pickup
   layers:
   - Default
   - TransparentFX

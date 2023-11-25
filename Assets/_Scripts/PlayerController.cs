@@ -55,6 +55,7 @@ public class PlayerController : MonoBehaviour
         if (Physics.Raycast(ray, out RaycastHit raycastHit))
         {
             shootTowards.position = raycastHit.point;
+            transform.LookAt(shootTowards);
         }
     }
 

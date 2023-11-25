@@ -25,6 +25,7 @@ public class NpcBehaviour : MonoBehaviour
     [SerializeField] private TextMeshProUGUI stateText;
     [SerializeField] private TextMeshProUGUI healthText;
     [SerializeField] private TextMeshProUGUI critText;
+    [SerializeField] private TextMeshProUGUI pickupCounterText;
     
     private MeshRenderer meshRenderer;
     
@@ -36,7 +37,7 @@ public class NpcBehaviour : MonoBehaviour
     private Transform lookAtPlayer;
     private Transform destination;
 
-    private float chaseDistance = 25f;
+    private float chaseDistance = 12f;
     private float shootingDistance = 6f;
     private float patrolPointDistance = 2f;
 
@@ -52,6 +53,8 @@ public class NpcBehaviour : MonoBehaviour
 
     private float health = 10000f;
     private double lambdaValueForDamageTaken = 0.3; // Smaller lambda value = skew to higher damage values
+
+    private int pickupCounter = 0;
     
     private void Awake()
     {
@@ -68,6 +71,7 @@ public class NpcBehaviour : MonoBehaviour
         
         UpdateHealthDisplay();
         idText.text = this.gameObject.name;
+        pickupCounterText.text = pickupCounter.ToString();
         
         // StartCoroutine(EnteredIdleState());
         currentState = UpdateState(NPCFiniteStateMachine.Patrol);
@@ -277,6 +281,15 @@ public class NpcBehaviour : MonoBehaviour
         if (other.CompareTag("PlayerBullet"))
         {
             TakeDamage();
+        }
+
+        if (other.CompareTag("Pickup"))
+        {
+            pickupCounter++;
+            pickupCounterText.text = pickupCounter.ToString();
+
+            pickupObjects.Remove(other.gameObject); // Remove collected pickup object from list of pickup objects
+            Destroy(other.gameObject);
         }
     }
 }
