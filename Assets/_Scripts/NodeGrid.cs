@@ -2,13 +2,15 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting;
 
 public class NodeGrid : MonoBehaviour {
 
 	public LayerMask unwalkableMask;
 	public Vector2 gridWorldSize;
 	public float nodeRadius;
-	private Node[,] grid;
+	public Node[,] grid;
 
 	float nodeDiameter;
 	int gridSizeX, gridSizeY;
@@ -23,6 +25,43 @@ public class NodeGrid : MonoBehaviour {
 	private string parentObjectName = "UNWALKABLE SPAWNER";
 
 	public List<Node> path = new List<Node>();
+
+	public List<NodeGrid> allOtherNodeGrids;
+
+	private Node previousNpcAtNode;
+
+	private void Awake()
+	{
+		allOtherNodeGrids = Resources.FindObjectsOfTypeAll<NodeGrid>().ToList();
+		
+		foreach (var nodeGrid in allOtherNodeGrids.ToList())
+		{
+			if (nodeGrid == this)
+			{
+				allOtherNodeGrids.Remove(nodeGrid);
+			}
+		}
+	}
+
+	private void Update()
+	{
+		Node npcAtNode = NodeFromWorldPoint(transform.position);
+
+		if (previousNpcAtNode != null)
+		{
+			foreach (var nodeGrid in allOtherNodeGrids)
+			{
+				nodeGrid.grid[previousNpcAtNode.gridX, previousNpcAtNode.gridY].walkable = true;
+			}
+		}
+		
+		foreach (var nodeGrid in allOtherNodeGrids.ToList())
+		{
+			nodeGrid.grid[npcAtNode.gridX, npcAtNode.gridY].walkable = false;
+		}
+
+		previousNpcAtNode = npcAtNode;
+	}
 
 	public void CreateGridBasedOnVertices(MeshData meshData, Dictionary<TerrainType, Terrain> terrainByType, AnimationCurve heightCurve)
 	{
