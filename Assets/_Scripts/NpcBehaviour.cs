@@ -24,7 +24,8 @@ public class NpcBehaviour : MonoBehaviour
     [SerializeField] private TextMeshProUGUI idText;
     [SerializeField] private TextMeshProUGUI stateText;
     [SerializeField] private TextMeshProUGUI healthText;
-
+    [SerializeField] private TextMeshProUGUI critText;
+    
     private MeshRenderer meshRenderer;
     
     private NPCFiniteStateMachine currentState;
@@ -237,6 +238,11 @@ public class NpcBehaviour : MonoBehaviour
     {
         int damage = CalculateDistributions.ExponentialDistribution(lambdaValueForDamageTaken, 1);
         health -= damage;
+
+        if (damage >= 10)
+        {
+            StartCoroutine(DisplayCritText());
+        }
         
         Debug.Log($"Took {damage} damage. Health is now at {health}");
 
@@ -252,6 +258,13 @@ public class NpcBehaviour : MonoBehaviour
     {
         healthText.text = health.ToString();
         healthText.color = Color.Lerp(Color.red, Color.green, health / 100f);
+    }
+
+    private IEnumerator DisplayCritText()
+    {
+        critText.gameObject.SetActive(true);
+        yield return new WaitForSeconds(2);
+        critText.gameObject.SetActive(false);
     }
 
     private void Die()

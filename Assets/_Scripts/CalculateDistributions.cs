@@ -6,6 +6,7 @@ using Random = UnityEngine.Random;
 
 public static class CalculateDistributions
 {
+    
     public static int ExponentialDistribution(double lambda, int minValue = 0)
     {
         double randomValue = Random.value; // Used to generate a random value from 0 to 1 (uniform distribution)

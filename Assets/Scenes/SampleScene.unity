@@ -1730,10 +1730,6 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 1845032196}
-    - target: {fileID: 1398767694618893718, guid: 5ce0f297f34cd9f4d9d9f465519d441a, type: 3}
-      propertyPath: m_text
-      value: 'ID:'
-      objectReference: {fileID: 0}
     - target: {fileID: 3427588790264496525, guid: 5ce0f297f34cd9f4d9d9f465519d441a, type: 3}
       propertyPath: m_LocalPosition.x
       value: 12.77
@@ -1774,29 +1770,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5324888078591670413, guid: 5ce0f297f34cd9f4d9d9f465519d441a, type: 3}
-      propertyPath: m_fontColor.b
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5324888078591670413, guid: 5ce0f297f34cd9f4d9d9f465519d441a, type: 3}
-      propertyPath: m_fontColor.g
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5324888078591670413, guid: 5ce0f297f34cd9f4d9d9f465519d441a, type: 3}
-      propertyPath: m_fontColor.r
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5324888078591670413, guid: 5ce0f297f34cd9f4d9d9f465519d441a, type: 3}
-      propertyPath: m_fontColor32.rgba
-      value: 4278190080
-      objectReference: {fileID: 0}
     - target: {fileID: 7051132275569056507, guid: 5ce0f297f34cd9f4d9d9f465519d441a, type: 3}
       propertyPath: m_Name
       value: NPC1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7226846040281496221, guid: 5ce0f297f34cd9f4d9d9f465519d441a, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0.161
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
