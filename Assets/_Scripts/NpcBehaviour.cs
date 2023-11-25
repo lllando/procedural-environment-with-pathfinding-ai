@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEditor.Rendering;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -52,9 +53,28 @@ public class NpcBehaviour : MonoBehaviour
     [SerializeField] private GameObject bulletPrefab;
 
     private float health = 10000f;
+    
+    // Exponential distribution variables
     private double lambdaValueForDamageTaken = 0.3; // Smaller lambda value = skew to higher damage values
+    
+    // Normal distribution variables
+    private double meanDamage = 6;
+    private double standardDeviationDamage = 3;
+    
+    // Uniform distribution variables
+    private int minDamage = 1;
+    private int maxDamage = 10;
 
     private int pickupCounter = 0;
+
+    public enum TakeDamageType
+    {
+        SymmetricalUniform, // Use random number generation
+        SymmetricalNormal, // Use normal distribution
+        AsymmetricalExponential // Use exponential distribution (lower value weighted)
+    }
+
+    public TakeDamageType takeDamageType;
     
     private void Awake()
     {
@@ -121,6 +141,7 @@ public class NpcBehaviour : MonoBehaviour
             case (NPCFiniteStateMachine.Patrol):
                 stateText.text = "Patrol";
                 stateText.color = patrolMat.color;
+                Debug.Log("Entered patrol state");
                 meshRenderer.material = patrolMat;
                 destination = GetRandomPickupObject();
                 break;
@@ -148,6 +169,7 @@ public class NpcBehaviour : MonoBehaviour
 
     private void Patrol()
     {
+        Debug.Log("In patrol state");
         AimAt(destination.position);
 
         pathfinding.FindPath(transform.position, destination.position);
@@ -247,7 +269,19 @@ public class NpcBehaviour : MonoBehaviour
     
     private void TakeDamage()
     {
-        int damage = CalculateDistributions.ExponentialDistribution(lambdaValueForDamageTaken, 1);
+        int damage = 1;
+        switch (takeDamageType)
+        {
+            case (TakeDamageType.SymmetricalUniform): 
+                damage = CalculateDistributions.UniformDistribution(minDamage, maxDamage);
+                break;
+            case (TakeDamageType.SymmetricalNormal): 
+                damage = CalculateDistributions.NormalDistribution(meanDamage, standardDeviationDamage);
+                break;
+            case (TakeDamageType.AsymmetricalExponential): 
+                damage = CalculateDistributions.ExponentialDistribution(lambdaValueForDamageTaken, 1);
+                break;
+        }
         health -= damage;
 
         if (damage >= 10)

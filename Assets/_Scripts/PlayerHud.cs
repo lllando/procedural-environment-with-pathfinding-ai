@@ -12,7 +12,7 @@ public class PlayerHud : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance != null)
+        if (Instance != null && Instance != this)
         {
             Destroy(this);
         }

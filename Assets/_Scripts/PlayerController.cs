@@ -20,10 +20,11 @@ public class PlayerController : MonoBehaviour
 
     private int health = 100;
 
-    private void Awake()
+    private void Start()
     {
         rb = GetComponent<Rigidbody>();
         mainCamera = Camera.main;
+        Debug.Log(PlayerHud.Instance +" player hud");
         
         PlayerHud.Instance.UpdateHealth(health);
     }

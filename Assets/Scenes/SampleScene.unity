@@ -1730,6 +1730,10 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 1845032196}
+    - target: {fileID: 966366006269480227, guid: 5ce0f297f34cd9f4d9d9f465519d441a, type: 3}
+      propertyPath: takeDamageType
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 2651755332031668759, guid: 5ce0f297f34cd9f4d9d9f465519d441a, type: 3}
       propertyPath: m_Material
       value: 
@@ -1850,9 +1854,9 @@ SceneRoots:
   - {fileID: 631115124}
   - {fileID: 1221311548}
   - {fileID: 524473671}
+  - {fileID: 531237683}
   - {fileID: 6105857288816527038}
   - {fileID: 3919696753812620100}
   - {fileID: 489116008}
   - {fileID: 1957591145}
   - {fileID: 1631292126}
-  - {fileID: 531237683}
