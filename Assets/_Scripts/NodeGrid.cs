@@ -49,18 +49,21 @@ public class NodeGrid : MonoBehaviour {
 
 		if (previousNpcAtNode != null)
 		{
-			foreach (var nodeGrid in allOtherNodeGrids)
-			{
-				nodeGrid.grid[previousNpcAtNode.gridX, previousNpcAtNode.gridY].walkable = true;
-			}
-		}
-		
-		foreach (var nodeGrid in allOtherNodeGrids.ToList())
-		{
-			nodeGrid.grid[npcAtNode.gridX, npcAtNode.gridY].walkable = false;
+			ChangeNodeWalkable(previousNpcAtNode, true);
+
 		}
 
+		ChangeNodeWalkable(npcAtNode, false);
+
 		previousNpcAtNode = npcAtNode;
+	}
+
+	private void ChangeNodeWalkable(Node n, bool walkable)
+	{
+		foreach (var nodeGrid in allOtherNodeGrids.ToList())
+		{
+			nodeGrid.grid[n.gridX, n.gridY].walkable = walkable;
+		}
 	}
 
 	public void CreateGridBasedOnVertices(MeshData meshData, Dictionary<TerrainType, Terrain> terrainByType, AnimationCurve heightCurve)
