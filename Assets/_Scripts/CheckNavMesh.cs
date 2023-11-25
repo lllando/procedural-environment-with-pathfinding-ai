@@ -15,7 +15,7 @@ public class CheckNavMesh : MonoBehaviour
 
     public List<GameObject> objectsToSpawnUsingNavmesh = new List<GameObject>();
     
-    private int numberOfNavMeshSpawnedObjects = 20;
+    private int numberOfNavMeshSpawnedObjects = 30;
     private float range = 30f;
     private float overlapRadius = 1f;
     private float checkRange = 25f; // Maximum distance to search for a NavMesh point

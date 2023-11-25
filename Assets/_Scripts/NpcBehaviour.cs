@@ -148,13 +148,19 @@ public class NpcBehaviour : MonoBehaviour
 
     private void Patrol()
     {
-        // AimAt();
+        AimAt(destination.position);
 
         pathfinding.FindPath(transform.position, destination.position);
 
         if (Vector3.Distance(transform.position, destination.position) < patrolPointDistance)
         {
             // destination = GetRandomPickupObject();
+            pickupCounter++;
+            pickupCounterText.text = pickupCounter.ToString();
+
+            pickupObjects.Remove(destination.gameObject); // Remove collected pickup object from list of pickup objects
+            Destroy(destination.gameObject);
+            
             currentState = UpdateState(NPCFiniteStateMachine.Idle);
         }
         if (Vector3.Distance(transform.position, player.position) < chaseDistance)
@@ -223,6 +229,7 @@ public class NpcBehaviour : MonoBehaviour
     private Transform GetRandomPickupObject()
     {
         int randomPickupObject = Random.Range(0, pickupObjects.Count);
+        Debug.Log($"List of objects: {pickupObjects.Count}. Getting object at index {randomPickupObject}.");
         return pickupObjects[randomPickupObject].transform;
     }
 
@@ -281,15 +288,6 @@ public class NpcBehaviour : MonoBehaviour
         if (other.CompareTag("PlayerBullet"))
         {
             TakeDamage();
-        }
-
-        if (other.CompareTag("Pickup"))
-        {
-            pickupCounter++;
-            pickupCounterText.text = pickupCounter.ToString();
-
-            pickupObjects.Remove(other.gameObject); // Remove collected pickup object from list of pickup objects
-            Destroy(other.gameObject);
         }
     }
 }
