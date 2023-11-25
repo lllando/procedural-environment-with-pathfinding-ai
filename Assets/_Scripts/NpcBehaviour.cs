@@ -171,7 +171,7 @@ public class NpcBehaviour : MonoBehaviour
         {
             shootCooldown = 1f / fireRate;
 
-            BulletController bullet = Instantiate(bulletPrefab, shootPoint.position, transform.rotation).GetComponent<BulletController>();
+            EnemyBulletController bullet = Instantiate(bulletPrefab, shootPoint.position, transform.rotation).GetComponent<EnemyBulletController>();
             bullet.UpdateBullet(lookAtPlayer);
         }
         // Check whether the player is in shoot range

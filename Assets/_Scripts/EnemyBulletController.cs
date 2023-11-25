@@ -3,11 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BulletController : MonoBehaviour
+public class EnemyBulletController : MonoBehaviour
 {
     private Rigidbody rb;
 
-    [SerializeField] private LayerMask canHitLayerMask;
     private void Awake()
     {
         rb = GetComponent<Rigidbody>(); 
