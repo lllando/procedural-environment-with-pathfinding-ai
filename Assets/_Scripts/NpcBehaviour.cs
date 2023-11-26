@@ -66,12 +66,8 @@ public class NpcBehaviour : MonoBehaviour
     private int maxDamage = 10;
 
     private int pickupCounter = 0;
-
-    private float customGravity = 9.81f;
-    private float raycastLength = 5f;
-
-    [SerializeField] private LayerMask terrainLayerMask;
-
+    
+    // Probability damage distributions
     public enum TakeDamageType
     {
         SymmetricalUniform, // Use random number generation
@@ -80,6 +76,13 @@ public class NpcBehaviour : MonoBehaviour
     }
 
     public TakeDamageType takeDamageType;
+
+    private float customGravity = 9.81f;
+    private float raycastLength = 5f;
+
+    [SerializeField] private LayerMask terrainLayerMask;
+
+
     
     private void Awake()
     {
@@ -194,7 +197,7 @@ public class NpcBehaviour : MonoBehaviour
         
         AimAt(destination.position);
 
-        pathfinding.FindPath(transform.position, destination.position);
+        pathfinding.FindPathUsingBFS(transform.position, destination.position);
 
         if (Vector3.Distance(transform.position, destination.position) < patrolPointDistance)
         {
@@ -259,6 +262,7 @@ public class NpcBehaviour : MonoBehaviour
             shootCooldown = 1f / fireRate;
 
             NpcBulletController bullet = Instantiate(bulletPrefab, shootPoint.position, transform.rotation).GetComponent<NpcBulletController>();
+            bullet.SetShooter(this.gameObject);
             bullet.UpdateBullet(lookAtPlayer);
         }
         // Check whether the player is in shoot range
@@ -304,6 +308,8 @@ public class NpcBehaviour : MonoBehaviour
                 break;
         }
         health -= damage;
+        
+        PlayerHud.Instance.UpdateDamageDealt(this.gameObject, damage); // Update player hud to display damage dealt
 
         if (damage >= 10)
         {

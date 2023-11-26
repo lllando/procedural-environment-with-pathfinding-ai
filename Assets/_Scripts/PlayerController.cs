@@ -18,7 +18,30 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private Transform shootTowards;
 
-    private int health = 100;
+    private int health = 100000;
+    
+    // Exponential distribution variables
+    private double lambdaValueForDamageTaken = 0.3; // Smaller lambda value = skew to higher damage values
+    
+    // Normal distribution variables
+    private double meanDamage = 6;
+    private double standardDeviationDamage = 3;
+    
+    // Uniform distribution variables
+    private int minDamage = 1;
+    private int maxDamage = 10;
+
+    private int pickupCounter = 0;
+    
+    // Probability damage distributions
+    public enum TakeDamageType
+    {
+        SymmetricalUniform, // Use random number generation
+        SymmetricalNormal, // Use normal distribution
+        AsymmetricalExponential // Use exponential distribution (lower value weighted)
+    }
+
+    public TakeDamageType takeDamageType;
 
     private void Start()
     {
@@ -66,12 +89,26 @@ public class PlayerController : MonoBehaviour
         bullet.UpdateBullet(shootTowards);
     }
     
-    private void TakeDamage(int damage)
+    private void TakeDamage(GameObject from)
     {
+        int damage = 1;
+        switch (takeDamageType)
+        {
+            case (TakeDamageType.SymmetricalUniform): 
+                damage = CalculateDistributions.UniformDistribution(minDamage, maxDamage);
+                break;
+            case (TakeDamageType.SymmetricalNormal): 
+                damage = CalculateDistributions.NormalDistribution(meanDamage, standardDeviationDamage);
+                break;
+            case (TakeDamageType.AsymmetricalExponential): 
+                damage = CalculateDistributions.ExponentialDistribution(lambdaValueForDamageTaken, 1);
+                break;
+        }
         health -= damage;
-
-        PlayerHud.Instance.UpdateHealth(health);
         
+        PlayerHud.Instance.UpdateDamageReceived(from, damage); // Update player hud to display damage dealt
+        PlayerHud.Instance.UpdateHealth(health);
+    
         if (health <= 0)
         {
             Die();
@@ -87,7 +124,7 @@ public class PlayerController : MonoBehaviour
     {
         if (other.CompareTag("NPCBullet"))
         {
-            TakeDamage(1);
+            TakeDamage(other.GetComponent<NpcBulletController>().ShotBy);
         }
     }
 }

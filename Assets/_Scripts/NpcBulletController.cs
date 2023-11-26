@@ -7,9 +7,13 @@ public class NpcBulletController : MonoBehaviour
 {
     private Rigidbody rb;
 
+    private GameObject shotBy;
+
+    public GameObject ShotBy => shotBy;
+
     private void Awake()
     {
-        rb = GetComponent<Rigidbody>(); 
+        rb = GetComponent<Rigidbody>();
     }
 
     public void UpdateBullet(Transform lookAt)
@@ -27,5 +31,10 @@ public class NpcBulletController : MonoBehaviour
             return;
         
         Destroy(this.gameObject);
+    }
+
+    public void SetShooter(GameObject shooter)
+    {
+        shotBy = shooter;
     }
 }

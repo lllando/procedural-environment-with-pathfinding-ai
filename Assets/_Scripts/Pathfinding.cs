@@ -68,6 +68,43 @@ public class Pathfinding : MonoBehaviour {
         }
     }
 
+    public void FindPathUsingBFS(Vector3 startPos, Vector3 targetPos)
+    {
+        Node startNode = grid.NodeFromWorldPoint(startPos);
+        Node targetNode = grid.NodeFromWorldPoint(targetPos);
+        
+        Queue<Node> queue = new Queue<Node>();
+        HashSet<Node> exploredNodes = new HashSet<Node>();
+        
+        queue.Enqueue(startNode);
+
+        while (queue.Count != 0)
+        {
+            Node currentNode = queue.Dequeue();
+            if (currentNode == targetNode)
+            {
+                // Path found to target
+                RetracePath(startNode,targetNode);
+                StopCoroutine(FollowPath());
+                StartCoroutine(FollowPath());
+            }
+            
+            foreach (Node neighbour in grid.GetNeighbours(currentNode)) {
+                if (!neighbour.walkable) {
+                    continue;
+                }
+                
+                if (!exploredNodes.Contains(neighbour))
+                {
+                    exploredNodes.Add(neighbour);
+                    neighbour.parent = currentNode;
+                    
+                    queue.Enqueue(neighbour);
+                }
+            }
+        }
+    }
+
     public void ClearPath()
     {
         grid.path.Clear();
@@ -92,8 +129,8 @@ public class Pathfinding : MonoBehaviour {
         int dstY = Mathf.Abs(nodeA.gridY - nodeB.gridY);
 
         if (dstX > dstY)
-            return 14*dstY + 10* (dstX-dstY);
-        return 14*dstX + 10 * (dstY-dstX);
+            return 14 * dstY + 10 * (dstX-dstY);
+        return 14 * dstX + 10 * (dstY-dstX);
     }
     
     private IEnumerator FollowPath()

@@ -156,7 +156,6 @@ public class NodeGrid : MonoBehaviour {
 
 		return neighbours;
 	}
-	
 
 	public Node NodeFromWorldPoint(Vector3 worldPosition)
 	{
