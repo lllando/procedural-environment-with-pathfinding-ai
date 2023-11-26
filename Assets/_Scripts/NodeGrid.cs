@@ -3,7 +3,6 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Unity.VisualScripting;
 
 public class NodeGrid : MonoBehaviour {
 
@@ -90,6 +89,7 @@ public class NodeGrid : MonoBehaviour {
 				Vector3 vertex = meshData.vertices[y * gridSizeX + x];
 				float vertexHeight = vertex.y;
 				bool walkable = true;
+				int movePenalty = 0;
 				
 				foreach (var t in terrainByType)
 				{
@@ -100,41 +100,46 @@ public class NodeGrid : MonoBehaviour {
 						unwalkableObject.transform.localScale *= MapGeneration.meshScale;
 						walkable = false;
 					}
+					
+					switch (t.Value.type)
+					{
+						case TerrainType.Sand:
+							movePenalty = 2;
+							break;
+						case TerrainType.LightGrass:
+							movePenalty = 1;
+							break;
+						case TerrainType.DarkGrass:
+							movePenalty = 3;
+							break;
+						case TerrainType.LightRock:
+							movePenalty = 5;
+							break;
+						case TerrainType.DarkRock:
+							movePenalty = 10;
+							break;
+						case TerrainType.Snow:
+							movePenalty = 20;
+							break;
+					}
 				}
 				
 				Collider[] objectCollisions = Physics.OverlapSphere(vertex, nodeRadius);
 				foreach (var col in objectCollisions)
 				{
-					// Only spawn if there is not an asset already near the location
+					// Mark node as unwalkable if there is an asset on it
 					if (col.CompareTag("TerrainAsset"))
 						walkable = false;
 				}
 
 				Vector3 vertexPosition = new Vector3(vertex.x, vertex.y, vertex.z);
-				// Vector3 vertexHeightRemoved = new Vector3(vertex.x, 1, vertex.z);
-				grid[x, y] = new Node(walkable, vertexPosition, x, y, vertexHeight);
-				// Debug.Log($"walkable ({walkable}) grid node created at [{x},{y}]");
+				grid[x, y] = new Node(walkable, vertexPosition, x, y, movePenalty, vertexHeight);
+				// Debug.Log($"walkable: ({walkable}) grid node created at: [{x},{y}]");
 			}
 
 		}
 
 		Node n = NodeFromWorldPoint(testObj.position);
-		// Debug.Log($"TEST OBJ: walkable ({n.walkable}) grid node created at [{n.gridX},{n.gridY}] with world coords {n.worldPosition}");
-		/*
-		foreach (var v in meshData.vertices)
-		{
-			int x = (int)v.x;
-			int y = (int)v.z;
-			int vertexHeight = (int)v.y;
-
-			Vector3 nodePosition = new Vector3(x, 0, y);
-
-			Debug.Log(nodePosition);
-			bool walkable = !Physics.CheckSphere(v, nodeRadius, unwalkableMask);
-			grid[x, y] = new Node(walkable, nodePosition, x, y, vertexHeight);
-		}
-		*/
-
 	}
 
 	public List<Node> GetNeighbours(Node node) {

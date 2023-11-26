@@ -20,7 +20,7 @@ public class Pathfinding : MonoBehaviour {
         seekerRb = seeker.GetComponent<Rigidbody>();
     }
     
-    public void FindPath(Vector3 startPos, Vector3 targetPos)
+    public bool FindPath(Vector3 startPos, Vector3 targetPos)
     {
         Node startNode = grid.NodeFromWorldPoint(startPos);
         Node targetNode = grid.NodeFromWorldPoint(targetPos);
@@ -47,7 +47,7 @@ public class Pathfinding : MonoBehaviour {
                 RetracePath(startNode,targetNode);
                 StopCoroutine(FollowPath());
                 StartCoroutine(FollowPath());
-                return;
+                return true;
             }
 
             foreach (Node neighbour in grid.GetNeighbours(node)) {
@@ -55,7 +55,7 @@ public class Pathfinding : MonoBehaviour {
                     continue;
                 }
 
-                int newCostToNeighbour = node.gCost + GetDistance(node, neighbour);
+                int newCostToNeighbour = node.gCost + GetDistance(node, neighbour) + neighbour.terrainCost;
                 if (newCostToNeighbour < neighbour.gCost || !openSet.Contains(neighbour)) {
                     neighbour.gCost = newCostToNeighbour;
                     neighbour.hCost = GetDistance(neighbour, targetNode);
@@ -66,6 +66,8 @@ public class Pathfinding : MonoBehaviour {
                 }
             }
         }
+
+        return false; // No path found
     }
 
     public void FindPathUsingBFS(Vector3 startPos, Vector3 targetPos)

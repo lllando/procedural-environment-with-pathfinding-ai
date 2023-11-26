@@ -197,7 +197,13 @@ public class NpcBehaviour : MonoBehaviour
         
         AimAt(destination.position);
 
-        pathfinding.FindPathUsingBFS(transform.position, destination.position);
+        // pathfinding.FindPathUsingBFS(transform.position, destination.position);
+        
+        bool isValidPath = pathfinding.FindPath(transform.position, destination.position);
+        Debug.Log("Is there a path? " + isValidPath);
+        
+        if (!isValidPath)
+            destination = GetRandomPickupObject();
 
         if (Vector3.Distance(transform.position, destination.position) < patrolPointDistance)
         {
@@ -276,7 +282,7 @@ public class NpcBehaviour : MonoBehaviour
     private Transform GetRandomPickupObject()
     {
         int randomPickupObject = Random.Range(0, pickupObjects.Count);
-        Debug.Log($"List of objects: {pickupObjects.Count}. Getting object at index {randomPickupObject}.");
+        Debug.Log($"Blobs remaining: {pickupObjects.Count}. Getting blob at index: {randomPickupObject} for {gameObject.name}");
         return pickupObjects[randomPickupObject].transform;
     }
 
