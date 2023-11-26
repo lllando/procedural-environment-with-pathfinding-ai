@@ -48,7 +48,7 @@ public class CheckNavMesh : MonoBehaviour
         }
         else
         {
-            Debug.Log(player.name + " is NOT on the NavMesh.");
+            Debug.LogError(player.name + " is NOT on the NavMesh.");
         }
 
         GameObject spawnedNavMeshAssetSpawner = GameObject.Find(parentObjectName);
@@ -61,7 +61,6 @@ public class CheckNavMesh : MonoBehaviour
 
         while (spawnedCount < numberOfNavMeshSpawnedObjects)
         {
-            //for (int spawnedCount = 0; spawnedCount < numberOfNavMeshSpawnedObjects; spawnedCount++)
             int randomObject = Random.Range(0, objectsToSpawnUsingNavmesh.Count);
             GameObject obj = objectsToSpawnUsingNavmesh[randomObject];
 
