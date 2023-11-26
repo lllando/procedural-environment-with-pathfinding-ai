@@ -46,7 +46,7 @@ public class NodeGrid : MonoBehaviour {
 	{
 		Node npcAtNode = NodeFromWorldPoint(transform.position);
 
-		if (previousNpcAtNode != null)
+		if (previousNpcAtNode != null && previousNpcAtNode.isAsset == false)
 		{
 			ChangeNodeWalkable(previousNpcAtNode, true);
 
@@ -89,6 +89,7 @@ public class NodeGrid : MonoBehaviour {
 				Vector3 vertex = meshData.vertices[y * gridSizeX + x];
 				float vertexHeight = vertex.y;
 				bool walkable = true;
+				bool isAsset = false;
 				int movePenalty = 0;
 				
 				foreach (var t in terrainByType)
@@ -99,6 +100,7 @@ public class NodeGrid : MonoBehaviour {
 						GameObject unwalkableObject = Instantiate(markAsUnwalkable, vertex * MapGeneration.meshScale, Quaternion.identity, unwalkableSpawner.transform);
 						unwalkableObject.transform.localScale *= MapGeneration.meshScale;
 						walkable = false;
+						isAsset = true;
 					}
 					
 					switch (t.Value.type)
@@ -129,11 +131,14 @@ public class NodeGrid : MonoBehaviour {
 				{
 					// Mark node as unwalkable if there is an asset on it
 					if (col.CompareTag("TerrainAsset"))
+					{
 						walkable = false;
+						isAsset = true;
+					}
 				}
 
 				Vector3 vertexPosition = new Vector3(vertex.x, vertex.y, vertex.z);
-				grid[x, y] = new Node(walkable, vertexPosition, x, y, movePenalty, vertexHeight);
+				grid[x, y] = new Node(walkable, isAsset, vertexPosition, x, y, movePenalty, vertexHeight);
 				// Debug.Log($"walkable: ({walkable}) grid node created at: [{x},{y}]");
 			}
 

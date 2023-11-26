@@ -9,6 +9,14 @@ using Random = UnityEngine.Random;
 
 public class NpcBehaviour : MonoBehaviour
 {
+    public enum EnemyType
+    {
+        Scout, // Uses A* pathfinding
+        Brute // Uses BFS pathfinding
+    }
+
+    public EnemyType enemyType = EnemyType.Scout;
+    
     enum NPCFiniteStateMachine
     {
         Idle,
@@ -16,6 +24,14 @@ public class NpcBehaviour : MonoBehaviour
         Chase,
         Shoot
     }
+
+    public enum PathfindingType
+    {
+        AStar,
+        BFS
+    }
+
+    public PathfindingType pathfindingType = PathfindingType.AStar;
 
     [SerializeField] private Material idleMat;
     [SerializeField] private Material patrolMat;
@@ -52,7 +68,7 @@ public class NpcBehaviour : MonoBehaviour
     [SerializeField] private Transform shootPoint;
     [SerializeField] private GameObject bulletPrefab;
 
-    private float health = 10000f;
+    private float health = 100f;
     
     // Exponential distribution variables
     private double lambdaValueForDamageTaken = 0.3; // Smaller lambda value = skew to higher damage values
@@ -77,12 +93,7 @@ public class NpcBehaviour : MonoBehaviour
 
     public TakeDamageType takeDamageType;
 
-    private float customGravity = 9.81f;
-    private float raycastLength = 5f;
-
     [SerializeField] private LayerMask terrainLayerMask;
-
-
     
     private void Awake()
     {
@@ -91,6 +102,8 @@ public class NpcBehaviour : MonoBehaviour
         checkNavMesh = FindFirstObjectByType<CheckNavMesh>();
 
         lookAtPlayer = player.GetChild(0);
+        
+        InitializeValuesForEnemyType();
     }
 
     private void Start()
@@ -98,7 +111,6 @@ public class NpcBehaviour : MonoBehaviour
         pickupObjects = checkNavMesh.spawnedPickupObjects;
         
         UpdateHealthDisplay();
-        idText.text = this.gameObject.name;
         pickupCounterText.text = pickupCounter.ToString();
         
         // StartCoroutine(EnteredIdleState());
@@ -109,6 +121,31 @@ public class NpcBehaviour : MonoBehaviour
     {
         FixSlopeMovement();
         RunStateLogic();
+    }
+
+    private void InitializeValuesForEnemyType()
+    {
+        switch (enemyType)
+        {
+            case EnemyType.Scout:
+                idText.text = "NPC_Scout";
+                health = 100;
+                pathfinding.moveSpeed = 0.01f;
+                break;
+            case EnemyType.Brute:
+                idText.text = "NPC_Brute";
+                health = 250;
+
+                chaseDistance /= 2;
+                
+                pathfinding.moveSpeed = 0.005f;
+                meanDamage *= 2;
+                minDamage *= 2;
+                maxDamage *= 2;
+                fireRate *= 2;
+                lambdaValueForDamageTaken = 0.2;
+                break;
+        }
     }
 
     private void FixSlopeMovement()
@@ -196,11 +233,9 @@ public class NpcBehaviour : MonoBehaviour
         }
         
         AimAt(destination.position);
-
-        // pathfinding.FindPathUsingBFS(transform.position, destination.position);
         
-        bool isValidPath = pathfinding.FindPathUsingBFS(transform.position, destination.position);
-        Debug.Log("Is there a path? " + isValidPath);
+        bool isValidPath = FindPathBasedOnPathfindingType(transform.position, destination.position);
+        Debug.Log("Valid path? " + isValidPath);
         
         if (!isValidPath)
             destination = GetRandomPickupObject();
@@ -236,8 +271,9 @@ public class NpcBehaviour : MonoBehaviour
         {
             currentState = UpdateState(NPCFiniteStateMachine.Patrol);
         }
-        
-        pathfinding.FindPath(transform.position, player.position);
+        bool isValidChasePath = FindPathBasedOnPathfindingType(transform.position, player.position);
+        Debug.Log("Valid chase path? " + isValidChasePath);
+
         
         // Check whether the player is in shoot range
         if (Vector3.Distance(transform.position, player.position) < shootingDistance)
@@ -330,6 +366,19 @@ public class NpcBehaviour : MonoBehaviour
         {
             Die();
         }
+    }
+
+    private bool FindPathBasedOnPathfindingType(Vector3 startPos, Vector3 targetPos)
+    {
+        switch (pathfindingType)
+        {
+            case PathfindingType.AStar:
+                return pathfinding.FindPath(startPos, targetPos);
+            case PathfindingType.BFS:
+                return pathfinding.FindPathUsingBFS(startPos, targetPos);
+        }
+
+        return false;
     }
 
     private void UpdateHealthDisplay()

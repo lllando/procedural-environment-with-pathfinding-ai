@@ -4,6 +4,7 @@ using System.Collections;
 public class Node {
 	
     public bool walkable;
+    public bool isAsset;
     public Vector3 worldPosition;
     public int gridX;
     public int gridY;
@@ -15,8 +16,9 @@ public class Node {
 
     public float meshVertexHeightAtNode;
 	
-    public Node(bool walkable, Vector3 worldPos, int gridX, int gridY, int terrainCost, float meshVertexHeightAtNode = 1f) {
+    public Node(bool walkable, bool isAsset, Vector3 worldPos, int gridX, int gridY, int terrainCost, float meshVertexHeightAtNode = 1f) {
         this.walkable = walkable;
+        this.isAsset = isAsset;
         this.worldPosition = worldPos;
         this.gridX = gridX;
         this.gridY = gridY;

@@ -7,7 +7,7 @@ public class Pathfinding : MonoBehaviour {
     public Transform seeker;
     public NodeGrid grid;
     
-    private float moveSpeed = 0.01f;
+    public float moveSpeed = 0.01f;
     private float maxSpeed = 0.01f;
     
     private float waypointTolerance = 0.1f;

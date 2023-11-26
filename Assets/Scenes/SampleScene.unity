@@ -238,6 +238,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   seeker: {fileID: 915158634}
   grid: {fileID: 0}
+  moveSpeed: 0.01
 --- !u!4 &524473671
 Transform:
   m_ObjectHideFlags: 0
@@ -1299,6 +1300,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   seeker: {fileID: 915158634}
   grid: {fileID: 0}
+  moveSpeed: 0.01
 --- !u!114 &1595312614
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1406,6 +1408,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1845032196}
     - target: {fileID: 966366006269480227, guid: 5ce0f297f34cd9f4d9d9f465519d441a, type: 3}
+      propertyPath: enemyType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 966366006269480227, guid: 5ce0f297f34cd9f4d9d9f465519d441a, type: 3}
       propertyPath: takeDamageType
       value: 2
       objectReference: {fileID: 0}
@@ -1463,7 +1469,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7051132275569056507, guid: 5ce0f297f34cd9f4d9d9f465519d441a, type: 3}
       propertyPath: m_Name
-      value: NPC2
+      value: NPCType2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1500,6 +1506,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   seeker: {fileID: 1852901757}
   grid: {fileID: 0}
+  moveSpeed: 0.01
 --- !u!114 &1852901764
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2062,7 +2069,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7051132275569056507, guid: 5ce0f297f34cd9f4d9d9f465519d441a, type: 3}
       propertyPath: m_Name
-      value: NPC1
+      value: NPCType1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
