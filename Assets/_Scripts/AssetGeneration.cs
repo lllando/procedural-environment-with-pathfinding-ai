@@ -11,13 +11,22 @@ public class AssetGeneration : MonoBehaviour
 {
     public bool generateAssets = true;
     public int numberOfAssetsToTrySpawn = 1000;
+    public int numberOfNpcsToSpawn = 5;
+    private int numberOfNpcsSpawned = 0;
 
     public List<TerrainAsset> terrainAssets = new List<TerrainAsset>();
 
+    public GameObject npcPrefab;
+
+    public List<GameObject> spawnedNpcs = new List<GameObject>();
+    
     private Vector3 objectPosition;
 
     private TerrainAsset currentTerrainAsset;
     private TerrainAsset previousTerrainAsset;
+
+    private float minHeight;
+    private float maxHeight;
     
     private float overlapRadius = 10f;
 
@@ -54,11 +63,17 @@ public class AssetGeneration : MonoBehaviour
 
                 currentTerrainAsset = terrainAssets[i];
                 previousTerrainAsset = terrainAssets[previousIndex];
-
-
-                // Don't try to spawn in regions that should not have assets in them
-                if (currentTerrainAsset.type == TerrainType.Water || currentTerrainAsset.type == TerrainType.Snow)
+                
+                // Set the min/max height for spawning assets. Also don't try to spawn assets in regions that should not have assets in them
+                if (currentTerrainAsset.type == TerrainType.Water)
                 {
+                    minHeight = currentTerrainAsset.height;
+                    continue;
+                }
+
+                if (currentTerrainAsset.type == TerrainType.Snow)
+                {
+                    maxHeight = currentTerrainAsset.height;
                     continue;
                 }
 
@@ -80,8 +95,7 @@ public class AssetGeneration : MonoBehaviour
                     if (currentHeight > currentTerrainAsset.height || currentHeight <= previousTerrainAsset.height)
                         continue;
 
-                    objectPosition = new Vector3(topLeftX + randomX,
-                        heightCurve.Evaluate(heightMap[randomX, randomY]) * heightMultiplier, topLeftZ - randomY);
+                    objectPosition = new Vector3(topLeftX + randomX, heightCurve.Evaluate(heightMap[randomX, randomY]) * heightMultiplier, topLeftZ - randomY);
 
                     Collider[] objectCollisions = Physics.OverlapSphere(objectPosition, overlapRadius);
 
@@ -103,12 +117,58 @@ public class AssetGeneration : MonoBehaviour
                     if (terrainObject == null)
                         return;
 
-                    GameObject spawnObj = Instantiate(terrainObject, objectPosition * MapGeneration.meshScale,
-                        Quaternion.identity, parentAssetSpawner.transform);
+                    GameObject spawnObj = Instantiate(terrainObject, objectPosition * MapGeneration.meshScale, Quaternion.identity, parentAssetSpawner.transform);
                     spawnObj.transform.localScale *= MapGeneration.meshScale;
                 }
             }
         }
+        
+        CheckNavMesh checkNavMesh = FindFirstObjectByType<CheckNavMesh>();
+        checkNavMesh.CheckAccessibilityAndSpawnObjects(heightMap);
+
+        numberOfNpcsSpawned = 0;
+        spawnedNpcs = new List<GameObject>();
+        while (numberOfNpcsSpawned < numberOfNpcsToSpawn)
+        {
+            int randomX = Random.Range(0, width);
+            int randomY = Random.Range(0, height);
+
+            float currentHeight = heightMap[randomX, randomY];
+
+            // Debug.Log($"{currentHeight} : {currentTerrainAsset.height} : {previousTerrainAsset.height}");
+
+            // Don't spawn asset NPC below minimum height
+            if (currentHeight < minHeight || currentHeight > maxHeight)
+                continue;
+
+            objectPosition = new Vector3(topLeftX + randomX, heightCurve.Evaluate(heightMap[randomX, randomY]) * heightMultiplier, topLeftZ - randomY);
+
+            Collider[] objectCollisions = Physics.OverlapSphere(objectPosition, overlapRadius);
+
+            foreach (var col in objectCollisions)
+            {
+                // Only spawn if there is not an asset already near the location
+                if (col.CompareTag("TerrainAsset") || col.CompareTag("Pickup") || col.CompareTag("NPC"))
+                    continue;
+                
+                GameObject npc = Instantiate(npcPrefab, objectPosition * MapGeneration.meshScale, Quaternion.identity);
+                spawnedNpcs.Add(npc);
+                numberOfNpcsSpawned++;
+            }
+        }
+
+        foreach (var npc in spawnedNpcs)
+        {
+            NodeGrid npcNodeGrid = npc.GetComponent<NodeGrid>();
+            npcNodeGrid.AddOtherNodeGrids();
+        }
+
+        foreach (var npc in spawnedNpcs)
+        {
+            NpcBehaviour npcBehaviour = npc.GetComponent<NpcBehaviour>();
+            npcBehaviour.InitializeNpc();
+        }
+        
     }
 }
 

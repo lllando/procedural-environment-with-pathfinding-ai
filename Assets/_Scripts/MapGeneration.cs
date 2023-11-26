@@ -58,7 +58,11 @@ public class MapGeneration : MonoBehaviour
     public Dictionary<TerrainType, Terrain> terrainByType = new Dictionary<TerrainType, Terrain>();
 
     public MeshData meshData;
-    private float[,] noiseMap;
+    
+    [HideInInspector]
+    public float[,] noiseMap;
+
+    public bool updateAutomatically = false;
     
     #region Component References
     public AssetGeneration assetGeneration;
@@ -131,9 +135,19 @@ public class MapGeneration : MonoBehaviour
             foreach(var nodeGrid in nodeGrids)
                 nodeGrid.CreateGridBasedOnVertices(meshData, terrainByType, meshHeightCurve);
 
+            // CheckNavMesh checkNavMesh = FindFirstObjectByType<CheckNavMesh>();
+            // checkNavMesh.BuildNavMeshBasedOnTerrain();
+            /*
             CheckNavMesh checkNavMesh = FindFirstObjectByType<CheckNavMesh>();
             checkNavMesh.CheckAccessibilityAndSpawnObjects(noiseMap, meshHeightMultiplier, meshHeightCurve);
+            */
         }
+    }
+
+    private void Start()
+    {
+        // CheckNavMesh checkNavMesh = FindFirstObjectByType<CheckNavMesh>();
+        // checkNavMesh.CheckAccessibilityAndSpawnObjects(noiseMap);    
     }
 
     public void InitializeTerrainGradientColours()

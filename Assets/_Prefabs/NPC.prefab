@@ -1326,6 +1326,8 @@ GameObject:
   - component: {fileID: 2651755332031668759}
   - component: {fileID: 5689964108738005987}
   - component: {fileID: 966366006269480227}
+  - component: {fileID: 2147367479952757915}
+  - component: {fileID: 1747546877105351441}
   m_Layer: 15
   m_Name: NPC
   m_TagString: NPC
@@ -1446,7 +1448,7 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 112
@@ -1463,6 +1465,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 739cb3462b131c444853bb5f8dfb2b54, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyType: 0
+  pathfindingType: 0
   idleMat: {fileID: 2100000, guid: 8e60de4bd258c9b4da12e1ba62ff69e9, type: 2}
   patrolMat: {fileID: 2100000, guid: 59dfe4c11baf9aa428cd6a4cbb750a1f, type: 2}
   chaseMat: {fileID: 2100000, guid: fe46993114fcf5f42ab65349d81844af, type: 2}
@@ -1472,9 +1476,48 @@ MonoBehaviour:
   healthText: {fileID: 6971958869158703384}
   critText: {fileID: 6097294966344989387}
   pickupCounterText: {fileID: 4613631784830288390}
-  player: {fileID: 0}
   shootPoint: {fileID: 2640340238716830551}
   bulletPrefab: {fileID: 8405989982097267612, guid: 5f610a9eb8d07484eacd6c334e569acd, type: 3}
+  takeDamageType: 2
+  terrainLayerMask:
+    serializedVersion: 2
+    m_Bits: 1024
+--- !u!114 &2147367479952757915
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7051132275569056507}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 81138fea5b194ea498c2a5c57d87c331, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  seeker: {fileID: 3427588790264496525}
+  grid: {fileID: 0}
+  moveSpeed: 0.01
+--- !u!114 &1747546877105351441
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7051132275569056507}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69cc927a217b3e644a0a194750d7aac9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unwalkableMask:
+    serializedVersion: 2
+    m_Bits: 2048
+  gridWorldSize: {x: 100, y: 100}
+  nodeRadius: 0.5
+  nodeGizmosTransparency: 0.4
+  testObj: {fileID: 0}
+  markAsUnwalkable: {fileID: 1363591443937772964, guid: 07e0dc83df603904091c4e85918c18ab, type: 3}
+  allOtherNodeGrids: []
 --- !u!1 &7125865554388550199
 GameObject:
   m_ObjectHideFlags: 0

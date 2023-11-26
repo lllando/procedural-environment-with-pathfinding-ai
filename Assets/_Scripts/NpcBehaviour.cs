@@ -50,7 +50,7 @@ public class NpcBehaviour : MonoBehaviour
 
     private Pathfinding pathfinding;
 
-    [SerializeField] private Transform player;
+    private Transform player;
     private Transform lookAtPlayer;
     private Transform destination;
 
@@ -59,7 +59,7 @@ public class NpcBehaviour : MonoBehaviour
     private float patrolPointDistance = 2f;
 
     private CheckNavMesh checkNavMesh;
-    private List<GameObject> pickupObjects;
+    // private List<GameObject> pickupObjects;
 
     private float turnSpeed = 10f;
     private float shootCooldown;
@@ -97,18 +97,51 @@ public class NpcBehaviour : MonoBehaviour
     
     private void Awake()
     {
+        /*
         meshRenderer = GetComponent<MeshRenderer>();
         pathfinding = GetComponent<Pathfinding>();
         checkNavMesh = FindFirstObjectByType<CheckNavMesh>();
 
+        player = FindFirstObjectByType<PlayerController>().transform;
+
         lookAtPlayer = player.GetChild(0);
+
+        int randomEnemyType = Random.Range(0, 2);
+        enemyType = randomEnemyType == 0 ? EnemyType.Scout : EnemyType.Brute;
         
         InitializeValuesForEnemyType();
+        */
     }
 
     private void Start()
     {
-        pickupObjects = checkNavMesh.spawnedPickupObjects;
+        /*
+        // pickupObjects = checkNavMesh.spawnedPickupObjects;
+        
+        UpdateHealthDisplay();
+        pickupCounterText.text = pickupCounter.ToString();
+        
+        // StartCoroutine(EnteredIdleState());
+        currentState = UpdateState(NPCFiniteStateMachine.Patrol);
+        */
+    }
+
+    public void InitializeNpc()
+    {
+        meshRenderer = GetComponent<MeshRenderer>();
+        pathfinding = GetComponent<Pathfinding>();
+        checkNavMesh = FindFirstObjectByType<CheckNavMesh>();
+
+        player = FindFirstObjectByType<PlayerController>().transform;
+
+        lookAtPlayer = player.GetChild(0);
+
+        int randomEnemyType = Random.Range(0, 2);
+        enemyType = randomEnemyType == 0 ? EnemyType.Scout : EnemyType.Brute;
+        
+        InitializeValuesForEnemyType();
+        
+        // pickupObjects = checkNavMesh.spawnedPickupObjects;
         
         UpdateHealthDisplay();
         pickupCounterText.text = pickupCounter.ToString();
@@ -125,19 +158,28 @@ public class NpcBehaviour : MonoBehaviour
 
     private void InitializeValuesForEnemyType()
     {
+        int randomDamageType = Random.Range(0, 3);
+        
+        if (randomDamageType == 0)
+            takeDamageType = TakeDamageType.SymmetricalUniform;
+        else if (randomDamageType == 1)
+            takeDamageType = TakeDamageType.SymmetricalNormal;
+        else if (randomDamageType == 2)
+            takeDamageType = TakeDamageType.AsymmetricalExponential;
+        
         switch (enemyType)
         {
             case EnemyType.Scout:
                 idText.text = "NPC_Scout";
                 health = 100;
+                pathfindingType = PathfindingType.AStar;
                 pathfinding.moveSpeed = 0.01f;
                 break;
             case EnemyType.Brute:
                 idText.text = "NPC_Brute";
                 health = 250;
-
                 chaseDistance /= 2;
-                
+                pathfindingType = PathfindingType.BFS;
                 pathfinding.moveSpeed = 0.005f;
                 meanDamage *= 2;
                 minDamage *= 2;
@@ -245,7 +287,7 @@ public class NpcBehaviour : MonoBehaviour
             pickupCounter++;
             pickupCounterText.text = pickupCounter.ToString();
 
-            pickupObjects.Remove(destination.gameObject); // Remove collected pickup object from list of pickup objects
+            checkNavMesh.spawnedPickupObjects.Remove(destination.gameObject); // Remove collected pickup object from list of pickup objects
             Destroy(destination.gameObject);
             
             currentState = UpdateState(NPCFiniteStateMachine.Idle);
@@ -317,9 +359,10 @@ public class NpcBehaviour : MonoBehaviour
 
     private Transform GetRandomPickupObject()
     {
-        int randomPickupObject = Random.Range(0, pickupObjects.Count);
-        Debug.Log($"Blobs remaining: {pickupObjects.Count}. Getting blob at index: {randomPickupObject} for {gameObject.name}");
-        return pickupObjects[randomPickupObject].transform;
+        Debug.Log("NAVMESH COUNT: " + checkNavMesh.spawnedPickupObjects.Count);
+        int randomPickupObject = Random.Range(0, checkNavMesh.spawnedPickupObjects.Count);
+        Debug.Log($"Blobs remaining: {checkNavMesh.spawnedPickupObjects.Count}. Getting blob at index: {randomPickupObject} for {gameObject.name}");
+        return checkNavMesh.spawnedPickupObjects[randomPickupObject].transform;
     }
 
     private void AimAt(Vector3 aimAt)

@@ -17,9 +17,12 @@ public class CheckNavMesh : MonoBehaviour
     
     private int numberOfNavMeshSpawnedObjects = 30;
     private int spawnedCount = 0;
+    
     private float range = 30f;
     private float overlapRadius = 1f;
     private float checkRange = 25f; // Maximum distance to search for a NavMesh point
+
+    public MapGeneration mapGeneration;
 
     private List<NavMeshPath> validPathsToPlayer = new List<NavMeshPath>();
     
@@ -27,18 +30,28 @@ public class CheckNavMesh : MonoBehaviour
 
     public GameObject testObject;
 
-    public List<GameObject> spawnedPickupObjects = new List<GameObject>();
+    public List<GameObject> spawnedPickupObjects;
+    
+    
+    private void Start()
+    {
+        // CheckAccessibilityAndSpawnObjects(mapGeneration.noiseMap);
+    }
 
-    public void CheckAccessibilityAndSpawnObjects(float[,] heightMap, float heightMultiplier, AnimationCurve heightCurve)
+    public void BuildNavMeshBasedOnTerrain()
     {
         navMeshSurface.BuildNavMesh();
+    }
 
+    public void CheckAccessibilityAndSpawnObjects(float[,] heightMap)
+    {
+        BuildNavMeshBasedOnTerrain();
+        
+        spawnedPickupObjects = new List<GameObject>();
+        
         int width = heightMap.GetLength(0);
         int height = heightMap.GetLength(1);
 
-        float topLeftX = (width - 1) / -2f;
-        float topLeftZ = (height - 1) / 2f;
-        
         NavMeshHit playerHit;
         bool isOnNavMesh = NavMesh.SamplePosition(player.position, out playerHit, checkRange, NavMesh.AllAreas);
 
@@ -117,7 +130,6 @@ public class CheckNavMesh : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        // DrawPath(pathToTarget, Color.red);
         foreach (var p in validPathsToPlayer)
         {
             DrawPath(p, Color.yellow);

@@ -31,6 +31,11 @@ public class NodeGrid : MonoBehaviour {
 
 	private void Awake()
 	{
+
+	}
+
+	public void AddOtherNodeGrids()
+	{
 		allOtherNodeGrids = Resources.FindObjectsOfTypeAll<NodeGrid>().ToList();
 		
 		foreach (var nodeGrid in allOtherNodeGrids.ToList())
@@ -96,7 +101,7 @@ public class NodeGrid : MonoBehaviour {
 				{
 					if (t.Value.type == TerrainType.Water && heightCurve.Evaluate(vertexHeight) < minUnwalkableHeight)
 					{
-						Debug.Log($"Compared evaluated h = {heightCurve.Evaluate(vertexHeight)} to terrain value height of {t.Value.height}");
+						// Debug.Log($"Compared evaluated h = {heightCurve.Evaluate(vertexHeight)} to terrain value height of {t.Value.height}");
 						GameObject unwalkableObject = Instantiate(markAsUnwalkable, vertex * MapGeneration.meshScale, Quaternion.identity, unwalkableSpawner.transform);
 						unwalkableObject.transform.localScale *= MapGeneration.meshScale;
 						walkable = false;
@@ -144,7 +149,7 @@ public class NodeGrid : MonoBehaviour {
 
 		}
 
-		Node n = NodeFromWorldPoint(testObj.position);
+		// Node n = NodeFromWorldPoint(testObj.position);
 	}
 
 	public List<Node> GetNeighbours(Node node) {
