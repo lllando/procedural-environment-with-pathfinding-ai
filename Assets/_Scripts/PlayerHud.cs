@@ -54,11 +54,11 @@ public class PlayerHud : MonoBehaviour
         TextMeshProUGUI damageReceivedUGUI = damageReceivedObj.GetComponent<TextMeshProUGUI>();
         
         if (damageAmount <= 3)
-            damageReceivedUGUI.text = $"Taken <color=yellow>{damageAmount}</color> damage by <color=black>{receivedDamageBy.name}</color>";
+            damageReceivedUGUI.text = $"Received <color=yellow>{damageAmount}</color> damage by <color=black>{receivedDamageBy.name}</color>";
         else if (damageAmount > 3 && damageAmount <= 8)
-            damageReceivedUGUI.text = $"Taken <color=orange>{damageAmount}</color> damage by <color=black>{receivedDamageBy.name}</color>";
+            damageReceivedUGUI.text = $"Received <color=orange>{damageAmount}</color> damage by <color=black>{receivedDamageBy.name}</color>";
         else if (damageAmount > 8)
-            damageReceivedUGUI.text = $"Taken <color=red>{damageAmount}</color> damage by <color=black>{receivedDamageBy.name}</color>";
+            damageReceivedUGUI.text = $"Received <color=red>{damageAmount}</color> damage by <color=black>{receivedDamageBy.name}</color>";
         
         Destroy(damageReceivedObj, damageTextDuration); // Destroy the text element after 5 seconds
     }
