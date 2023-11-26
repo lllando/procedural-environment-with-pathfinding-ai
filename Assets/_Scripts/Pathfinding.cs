@@ -47,7 +47,7 @@ public class Pathfinding : MonoBehaviour {
                 RetracePath(startNode,targetNode);
                 StopCoroutine(FollowPath());
                 StartCoroutine(FollowPath());
-                return true;
+                return true; // Path found
             }
 
             foreach (Node neighbour in grid.GetNeighbours(node)) {
@@ -70,7 +70,7 @@ public class Pathfinding : MonoBehaviour {
         return false; // No path found
     }
 
-    public void FindPathUsingBFS(Vector3 startPos, Vector3 targetPos)
+    public bool FindPathUsingBFS(Vector3 startPos, Vector3 targetPos)
     {
         Node startNode = grid.NodeFromWorldPoint(startPos);
         Node targetNode = grid.NodeFromWorldPoint(targetPos);
@@ -89,6 +89,7 @@ public class Pathfinding : MonoBehaviour {
                 RetracePath(startNode,targetNode);
                 StopCoroutine(FollowPath());
                 StartCoroutine(FollowPath());
+                return true; // Path found
             }
             
             foreach (Node neighbour in grid.GetNeighbours(currentNode)) {
@@ -105,6 +106,8 @@ public class Pathfinding : MonoBehaviour {
                 }
             }
         }
+
+        return false; // No path found
     }
 
     public void ClearPath()

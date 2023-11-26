@@ -199,7 +199,7 @@ public class NpcBehaviour : MonoBehaviour
 
         // pathfinding.FindPathUsingBFS(transform.position, destination.position);
         
-        bool isValidPath = pathfinding.FindPath(transform.position, destination.position);
+        bool isValidPath = pathfinding.FindPathUsingBFS(transform.position, destination.position);
         Debug.Log("Is there a path? " + isValidPath);
         
         if (!isValidPath)
