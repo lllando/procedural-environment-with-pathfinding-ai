@@ -16,6 +16,7 @@ public class CheckNavMesh : MonoBehaviour
     public List<GameObject> objectsToSpawnUsingNavmesh = new List<GameObject>();
     
     private int numberOfNavMeshSpawnedObjects = 30;
+    private int spawnedCount = 0;
     private float range = 30f;
     private float overlapRadius = 1f;
     private float checkRange = 25f; // Maximum distance to search for a NavMesh point
@@ -58,8 +59,9 @@ public class CheckNavMesh : MonoBehaviour
         
         GameObject navMeshAssetSpawner = new GameObject(parentObjectName);
 
-        for (int i = 0; i < numberOfNavMeshSpawnedObjects; i++)
+        while (spawnedCount < numberOfNavMeshSpawnedObjects)
         {
+            //for (int spawnedCount = 0; spawnedCount < numberOfNavMeshSpawnedObjects; spawnedCount++)
             int randomObject = Random.Range(0, objectsToSpawnUsingNavmesh.Count);
             GameObject obj = objectsToSpawnUsingNavmesh[randomObject];
 
@@ -87,7 +89,7 @@ public class CheckNavMesh : MonoBehaviour
                     foreach (var col in objectCollisions)
                     {
                         // Only spawn if there is not an asset near the location
-                        if (col.CompareTag("TerrainAsset"))
+                        if (col.CompareTag("TerrainAsset") || col.CompareTag("Pickup"))
                             shouldSpawn = false;
                     }
 
@@ -97,6 +99,7 @@ public class CheckNavMesh : MonoBehaviour
                         spawnedPickupObjects.Add(spawnedObject);
                         Debug.Log($"{spawnedObject} spawned at {finalPos}");
                         validPathsToPlayer.Add(pathToPlayer);
+                        spawnedCount++;
                     }
                 }
             }
