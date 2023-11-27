@@ -70,8 +70,12 @@ public class MapGeneration : MonoBehaviour
     
     private void Awake()
     {
+        var watch = System.Diagnostics.Stopwatch.StartNew();
         InitializeTerrainGradientColours();
         GenerateMap(false); // Generate the map
+        watch.Stop();
+
+        Debug.Log("Elapsed time: " + (watch.ElapsedMilliseconds));
     }
 
     public void GenerateMap(bool isCalledFromEditor)
