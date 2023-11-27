@@ -18,7 +18,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private Transform shootTowards;
 
-    private int health = 100000;
+    private int health = 500;
     
     // Exponential distribution variables
     private double lambdaValueForDamageTaken = 0.3; // Smaller lambda value = skew to higher damage values
