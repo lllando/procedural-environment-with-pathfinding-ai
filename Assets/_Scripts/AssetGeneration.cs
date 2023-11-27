@@ -9,7 +9,7 @@ using Random = UnityEngine.Random;
 
 public class AssetGeneration : MonoBehaviour
 {
-    public bool generateAssets = true;
+    public bool generateAssets;
     public int numberOfAssetsToTrySpawn = 1000;
     public int numberOfNpcsToSpawn = 5;
     private int numberOfNpcsSpawned = 0;
@@ -36,8 +36,10 @@ public class AssetGeneration : MonoBehaviour
 
 
 
-    public void GenerateAssets(float[,] heightMap, float heightMultiplier, AnimationCurve heightCurve)
+    public void GenerateAssets(float[,] heightMap, float heightMultiplier, AnimationCurve heightCurve, bool isCalledFromEditor)
     {
+        Transform player = FindFirstObjectByType<PlayerController>().transform;
+        
         GameObject spawnedAssets = GameObject.Find(parentObjectName);
         if (spawnedAssets != null)
         {
@@ -123,9 +125,14 @@ public class AssetGeneration : MonoBehaviour
             }
         }
         
+        // Exit early if being called when not in play mode. Only want mesh + asset generation in this case.
+        if (isCalledFromEditor)
+            return;
+        
         CheckNavMesh checkNavMesh = FindFirstObjectByType<CheckNavMesh>();
-        checkNavMesh.CheckAccessibilityAndSpawnObjects(heightMap);
-
+        checkNavMesh.CheckAccessibilityAndSpawnObjects(heightMap, minHeight, maxHeight);
+        
+        // Dont spawn NPCs if in editor mode of game
         numberOfNpcsSpawned = 0;
         spawnedNpcs = new List<GameObject>();
         while (numberOfNpcsSpawned < numberOfNpcsToSpawn)
@@ -149,7 +156,7 @@ public class AssetGeneration : MonoBehaviour
             {
                 // Only spawn if there is not an asset already near the location
                 if (col.CompareTag("TerrainAsset") || col.CompareTag("Pickup") || col.CompareTag("NPC"))
-                    continue;
+                    break;
                 
                 GameObject npc = Instantiate(npcPrefab, objectPosition * MapGeneration.meshScale, Quaternion.identity);
                 spawnedNpcs.Add(npc);

@@ -13,14 +13,14 @@ public class MapGenerationEditor : Editor
             if (mapGeneration.updateAutomatically)
             {
                 mapGeneration.InitializeTerrainGradientColours();
-                mapGeneration.GenerateMap(); // Generate the map
+                mapGeneration.GenerateMap(true); // Generate the map
             }
         }
 
         if (GUILayout.Button("Generate")) // If editor button 'Generate' is clicked
         {
             mapGeneration.InitializeTerrainGradientColours();
-            mapGeneration.GenerateMap(); // Generate the map
+            mapGeneration.GenerateMap(true); // Generate the map
         }
     }
 }

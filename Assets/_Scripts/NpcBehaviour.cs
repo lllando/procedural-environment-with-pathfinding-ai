@@ -95,37 +95,6 @@ public class NpcBehaviour : MonoBehaviour
 
     [SerializeField] private LayerMask terrainLayerMask;
     
-    private void Awake()
-    {
-        /*
-        meshRenderer = GetComponent<MeshRenderer>();
-        pathfinding = GetComponent<Pathfinding>();
-        checkNavMesh = FindFirstObjectByType<CheckNavMesh>();
-
-        player = FindFirstObjectByType<PlayerController>().transform;
-
-        lookAtPlayer = player.GetChild(0);
-
-        int randomEnemyType = Random.Range(0, 2);
-        enemyType = randomEnemyType == 0 ? EnemyType.Scout : EnemyType.Brute;
-        
-        InitializeValuesForEnemyType();
-        */
-    }
-
-    private void Start()
-    {
-        /*
-        // pickupObjects = checkNavMesh.spawnedPickupObjects;
-        
-        UpdateHealthDisplay();
-        pickupCounterText.text = pickupCounter.ToString();
-        
-        // StartCoroutine(EnteredIdleState());
-        currentState = UpdateState(NPCFiniteStateMachine.Patrol);
-        */
-    }
-
     public void InitializeNpc()
     {
         meshRenderer = GetComponent<MeshRenderer>();

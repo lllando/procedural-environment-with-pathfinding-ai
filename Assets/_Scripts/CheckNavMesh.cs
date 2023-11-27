@@ -8,14 +8,14 @@ using Random = UnityEngine.Random;
 
 public class CheckNavMesh : MonoBehaviour
 {
-    public NavMeshSurface navMeshSurface;
+    private NavMeshSurface navMeshSurface;
     
     public Transform player;
     private Vector3 targetNavMeshPosition;
 
     public List<GameObject> objectsToSpawnUsingNavmesh = new List<GameObject>();
-    
-    private int numberOfNavMeshSpawnedObjects = 30;
+
+    private int numberOfNavMeshSpawnedObjects = 20;
     private int spawnedCount = 0;
     
     private float range = 30f;
@@ -30,6 +30,7 @@ public class CheckNavMesh : MonoBehaviour
 
     public GameObject testObject;
 
+    [HideInInspector]
     public List<GameObject> spawnedPickupObjects;
     
     
@@ -37,15 +38,11 @@ public class CheckNavMesh : MonoBehaviour
     {
         // CheckAccessibilityAndSpawnObjects(mapGeneration.noiseMap);
     }
-
-    public void BuildNavMeshBasedOnTerrain()
+    
+    public void CheckAccessibilityAndSpawnObjects(float[,] heightMap, float minHeight, float maxHeight)
     {
+        navMeshSurface = GetComponent<NavMeshSurface>();
         navMeshSurface.BuildNavMesh();
-    }
-
-    public void CheckAccessibilityAndSpawnObjects(float[,] heightMap)
-    {
-        BuildNavMeshBasedOnTerrain();
         
         spawnedPickupObjects = new List<GameObject>();
         
@@ -63,6 +60,8 @@ public class CheckNavMesh : MonoBehaviour
         {
             Debug.LogError(player.name + " is NOT on the NavMesh.");
         }
+
+        player.transform.position = playerHit.position;
 
         GameObject spawnedNavMeshAssetSpawner = GameObject.Find(parentObjectName);
         if (spawnedNavMeshAssetSpawner != null)
@@ -86,9 +85,14 @@ public class CheckNavMesh : MonoBehaviour
 
             if (isOnNavMesh2)
             {
-                Debug.Log(obj.name + " is on the NavMesh at " + hit.position);
+                Debug.Log(obj.name + " is on the NavMesh at " + hit.position + " with a minHeight of " + minHeight);
                 Vector3 finalPos = hit.position;
+                // Instantiate(testObject, hit.position, Quaternion.identity);
+                float newMinHeight = minHeight + 0.1f;
 
+                if (finalPos.y < newMinHeight || finalPos.y > maxHeight)
+                    continue;
+                
                 NavMeshPath pathToPlayer = new NavMeshPath();
                 if (IsAccessibleByPlayer(playerHit.position, finalPos, pathToPlayer))
                 {
@@ -97,12 +101,12 @@ public class CheckNavMesh : MonoBehaviour
 
                     Collider[] objectCollisions = Physics.OverlapSphere(finalPos, overlapRadius);
 
-                    bool shouldSpawn = true;
+                    bool shouldSpawn = false;
                     foreach (var col in objectCollisions)
                     {
                         // Only spawn if there is not an asset near the location
-                        if (col.CompareTag("TerrainAsset") || col.CompareTag("Pickup"))
-                            shouldSpawn = false;
+                        if (!col.CompareTag("TerrainAsset") && !col.CompareTag("Pickup"))
+                            shouldSpawn = true;
                     }
 
                     if (shouldSpawn)
@@ -114,11 +118,15 @@ public class CheckNavMesh : MonoBehaviour
                         spawnedCount++;
                     }
                 }
+                else
+                {
+                    Debug.Log("Invalid path");
+                }
             }
         }
     }
 
-    private bool IsAccessibleByPlayer(Vector3 sourcePosition, Vector3 targetPosition, NavMeshPath path)
+    public bool IsAccessibleByPlayer(Vector3 sourcePosition, Vector3 targetPosition, NavMeshPath path)
     {
         if (NavMesh.CalculatePath(sourcePosition, targetPosition, NavMesh.AllAreas, path))
         {
@@ -140,10 +148,13 @@ public class CheckNavMesh : MonoBehaviour
     {
         if (path != null)
         {
-            Gizmos.color = color;
-            for (int i = 0; i < path.corners.Length - 1; i++)
+            if (path.status == NavMeshPathStatus.PathComplete)
             {
-                Gizmos.DrawLine(path.corners[i], path.corners[i + 1]);
+                Gizmos.color = color;
+                for (int i = 0; i < path.corners.Length - 1; i++)
+                {
+                    Gizmos.DrawLine(path.corners[i], path.corners[i + 1]);
+                }
             }
         }
     }

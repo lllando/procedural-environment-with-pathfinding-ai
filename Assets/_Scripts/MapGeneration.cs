@@ -71,10 +71,10 @@ public class MapGeneration : MonoBehaviour
     private void Awake()
     {
         InitializeTerrainGradientColours();
-        GenerateMap(); // Generate the map
+        GenerateMap(false); // Generate the map
     }
 
-    public void GenerateMap()
+    public void GenerateMap(bool isCalledFromEditor)
     {
         noiseMap = NoiseGeneration.GenerateNoiseMap(mapWidth, mapHeight, seed, noiseScale, octaves, persistance, lacunarity, offset);
 
@@ -127,29 +127,16 @@ public class MapGeneration : MonoBehaviour
             display.DrawMesh(meshData, TextureGeneration.TextureFromColourMap(colourMap, mapWidth, mapHeight, filterMode));
             
             if (assetGeneration.generateAssets)
-                assetGeneration.GenerateAssets(noiseMap, meshHeightMultiplier, meshHeightCurve);
+                assetGeneration.GenerateAssets(noiseMap, meshHeightMultiplier, meshHeightCurve, isCalledFromEditor);
 
-            // NodeGrid nodeGrid = FindFirstObjectByType<NodeGrid>();
             NodeGrid[] nodeGrids = Resources.FindObjectsOfTypeAll<NodeGrid>();
             
             foreach(var nodeGrid in nodeGrids)
                 nodeGrid.CreateGridBasedOnVertices(meshData, terrainByType, meshHeightCurve);
-
-            // CheckNavMesh checkNavMesh = FindFirstObjectByType<CheckNavMesh>();
-            // checkNavMesh.BuildNavMeshBasedOnTerrain();
-            /*
-            CheckNavMesh checkNavMesh = FindFirstObjectByType<CheckNavMesh>();
-            checkNavMesh.CheckAccessibilityAndSpawnObjects(noiseMap, meshHeightMultiplier, meshHeightCurve);
-            */
+            
         }
     }
-
-    private void Start()
-    {
-        // CheckNavMesh checkNavMesh = FindFirstObjectByType<CheckNavMesh>();
-        // checkNavMesh.CheckAccessibilityAndSpawnObjects(noiseMap);    
-    }
-
+    
     public void InitializeTerrainGradientColours()
     {
         GradientColorKey[] colourKeys = heightGradient.colorKeys;

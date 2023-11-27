@@ -28,12 +28,7 @@ public class NodeGrid : MonoBehaviour {
 	public List<NodeGrid> allOtherNodeGrids;
 
 	private Node previousNpcAtNode;
-
-	private void Awake()
-	{
-
-	}
-
+	
 	public void AddOtherNodeGrids()
 	{
 		allOtherNodeGrids = Resources.FindObjectsOfTypeAll<NodeGrid>().ToList();
