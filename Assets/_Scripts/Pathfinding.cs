@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Profiling;
 
 public class Pathfinding : MonoBehaviour {
 
@@ -12,6 +13,14 @@ public class Pathfinding : MonoBehaviour {
     
     private float waypointTolerance = 0.1f;
     private Rigidbody seekerRb;
+    
+    // FindPath
+    private List<Node> openSet = new List<Node>();
+    private HashSet<Node> closedSet = new HashSet<Node>();
+    
+    // FindPathUsingBFS
+    private Queue<Node> queue = new Queue<Node>();
+    private HashSet<Node> exploredNodes = new HashSet<Node>();
 
 
 
@@ -24,9 +33,11 @@ public class Pathfinding : MonoBehaviour {
     {
         Node startNode = grid.NodeFromWorldPoint(startPos);
         Node targetNode = grid.NodeFromWorldPoint(targetPos);
+        
+        openSet.Clear();
+        closedSet.Clear();
 
-        List<Node> openSet = new List<Node>();
-        HashSet<Node> closedSet = new HashSet<Node>();
+
         openSet.Add(startNode);
 
         while (openSet.Count > 0) {
@@ -72,11 +83,12 @@ public class Pathfinding : MonoBehaviour {
 
     public bool FindPathUsingBFS(Vector3 startPos, Vector3 targetPos)
     {
+        Profiler.BeginSample("Sample_BFS");
         Node startNode = grid.NodeFromWorldPoint(startPos);
         Node targetNode = grid.NodeFromWorldPoint(targetPos);
         
-        Queue<Node> queue = new Queue<Node>();
-        HashSet<Node> exploredNodes = new HashSet<Node>();
+        queue.Clear();
+        exploredNodes.Clear();
         
         queue.Enqueue(startNode);
 
@@ -106,7 +118,7 @@ public class Pathfinding : MonoBehaviour {
                 }
             }
         }
-
+        Profiler.EndSample();
         return false; // No path found
     }
 

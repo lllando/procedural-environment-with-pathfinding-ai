@@ -210,7 +210,7 @@ public class NpcBehaviour : MonoBehaviour
             case (NPCFiniteStateMachine.Patrol):
                 stateText.text = "Patrol";
                 stateText.color = patrolMat.color;
-                Debug.Log("Entered patrol state");
+                // Debug.Log("Entered patrol state");
                 meshRenderer.material = patrolMat;
                 destination = GetRandomPickupObject();
                 break;
@@ -246,7 +246,7 @@ public class NpcBehaviour : MonoBehaviour
         AimAt(destination.position);
         
         bool isValidPath = FindPathBasedOnPathfindingType(transform.position, destination.position);
-        Debug.Log("Valid path? " + isValidPath);
+        // Debug.Log("Valid path? " + isValidPath);
         
         if (!isValidPath)
             destination = GetRandomPickupObject();
@@ -283,7 +283,7 @@ public class NpcBehaviour : MonoBehaviour
             currentState = UpdateState(NPCFiniteStateMachine.Patrol);
         }
         bool isValidChasePath = FindPathBasedOnPathfindingType(transform.position, player.position);
-        Debug.Log("Valid chase path? " + isValidChasePath);
+        // Debug.Log("Valid chase path? " + isValidChasePath);
 
         
         // Check whether the player is in shoot range
@@ -328,9 +328,9 @@ public class NpcBehaviour : MonoBehaviour
 
     private Transform GetRandomPickupObject()
     {
-        Debug.Log("NAVMESH COUNT: " + checkNavMesh.spawnedPickupObjects.Count);
+        // Debug.Log("NAVMESH COUNT: " + checkNavMesh.spawnedPickupObjects.Count);
         int randomPickupObject = Random.Range(0, checkNavMesh.spawnedPickupObjects.Count);
-        Debug.Log($"Blobs remaining: {checkNavMesh.spawnedPickupObjects.Count}. Getting blob at index: {randomPickupObject} for {gameObject.name}");
+        // Debug.Log($"Blobs remaining: {checkNavMesh.spawnedPickupObjects.Count}. Getting blob at index: {randomPickupObject} for {gameObject.name}");
         return checkNavMesh.spawnedPickupObjects[randomPickupObject].transform;
     }
 
@@ -370,7 +370,7 @@ public class NpcBehaviour : MonoBehaviour
             StartCoroutine(DisplayCritText());
         }
         
-        Debug.Log($"Took {damage} damage. Health is now at {health}");
+        // Debug.Log($"Took {damage} damage. Health is now at {health}");
 
         UpdateHealthDisplay();
     

@@ -3,6 +3,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine.Profiling;
 
 public class NodeGrid : MonoBehaviour {
 
@@ -29,6 +30,9 @@ public class NodeGrid : MonoBehaviour {
 
 	private Node previousNpcAtNode;
 	
+	private List<Node> neighbours = new List<Node>();
+
+	
 	public void AddOtherNodeGrids()
 	{
 		allOtherNodeGrids = Resources.FindObjectsOfTypeAll<NodeGrid>().ToList();
@@ -44,6 +48,7 @@ public class NodeGrid : MonoBehaviour {
 
 	private void Update()
 	{
+		Profiler.BeginSample("NodeWalkable");
 		Node npcAtNode = NodeFromWorldPoint(transform.position);
 
 		if (previousNpcAtNode != null && previousNpcAtNode.isAsset == false)
@@ -55,6 +60,7 @@ public class NodeGrid : MonoBehaviour {
 		ChangeNodeWalkable(npcAtNode, false);
 
 		previousNpcAtNode = npcAtNode;
+		Profiler.EndSample();
 	}
 
 	private void ChangeNodeWalkable(Node n, bool walkable)
@@ -147,9 +153,10 @@ public class NodeGrid : MonoBehaviour {
 		// Node n = NodeFromWorldPoint(testObj.position);
 	}
 
-	public List<Node> GetNeighbours(Node node) {
-		List<Node> neighbours = new List<Node>();
-
+	public List<Node> GetNeighbours(Node node)
+	{
+		neighbours.Clear();
+		
 		for (int x = -1; x <= 1; x++) {
 			for (int y = -1; y <= 1; y++) {
 				if (x == 0 && y == 0)
